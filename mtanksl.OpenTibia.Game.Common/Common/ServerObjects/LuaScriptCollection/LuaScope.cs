@@ -379,6 +379,26 @@ namespace OpenTibia.Game.Common.ServerObjects
             return null;
         }
 
+        public static short GetInt16(object value, short defaultValue = default(short) )
+        {
+            if (value != null)
+            {
+                return (short)(long)value;
+            }
+
+            return defaultValue;
+        }
+
+        public static short? GetNullableInt16(object value)
+        {
+            if (value != null)
+            {
+                return (short)(long)value;
+            }
+
+            return null;
+        }
+
         public static ushort GetUInt16(object value, ushort defaultValue = default(ushort) )
         {
             if (value != null)

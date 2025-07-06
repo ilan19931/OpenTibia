@@ -44,17 +44,11 @@ namespace OpenTibia.Game.Common.ServerObjects
 
             lua.RegisterFunction("cast", this, GetType().GetMethod(nameof(Cast) ) );
 
+            lua.RegisterFunction("new", this, GetType().GetMethod(nameof(New) ) );
+
             lua.RegisterFunction("getconfig", this, GetType().GetMethod(nameof(GetConfig) ) );
 
             lua.RegisterFunction("getfullpath", this, GetType().GetMethod(nameof(GetFullPath) ) );
-
-            lua.RegisterFunction("tolight", this, GetType().GetMethod(nameof(ToLight) ) );
-
-            lua.RegisterFunction("tooutfit", this, GetType().GetMethod(nameof(ToOutfit) ) );
-
-            lua.RegisterFunction("toposition", this, GetType().GetMethod(nameof(ToPosition) ) );
-
-            lua.RegisterFunction("totile", this, GetType().GetMethod(nameof(ToTile) ) );
 
             lua.RegisterCoFunction("registerplugin", (luaScope, args) =>
             {
@@ -1265,12 +1259,78 @@ namespace OpenTibia.Game.Common.ServerObjects
             return obj.GetType().FullName;
         }
 
+        /// <exception cref="ArgumentException"></exception>
 #if AOT
         [RequiresUnreferencedCode("Used by lua.RegisterFunction.")]
 #endif
         public object Cast(string typeName, object obj)
         {
-            return Convert.ChangeType(obj, server.PluginLoader.GetType(typeName) );
+            Type type = server.PluginLoader.GetType(typeName);
+
+            if (type == null)
+            {
+                throw new ArgumentException("Type '" + typeName + "' not found.");
+            }
+
+            return Convert.ChangeType(obj, type);
+        }
+
+        /// <exception cref="ArgumentException"></exception>
+#if AOT
+        [RequiresUnreferencedCode("Used by lua.RegisterFunction.")]
+#endif
+        public object New(string typeName, params object[] args)
+        {
+            Type type = server.PluginLoader.GetType(typeName);
+
+            if (type == null)
+            {
+                throw new ArgumentException("Type '" + typeName + "' not found.");
+            }
+
+            var constructors = type.GetConstructors();
+
+            foreach (var constructor in constructors)
+            {
+                var parameters = constructor.GetParameters();
+
+                if (parameters.Length == args.Length)
+                {
+                    object[] convertedArgs = new object[args.Length];
+
+                    bool match = true;
+
+                    for (int i = 0; i < parameters.Length; i++)
+                    {
+                        Type parameterType = parameters[i].ParameterType;
+
+                        if (args[i] is long || args[i] is double) // NLua converts numbers to long or double, and this hides the underlying type
+                        {
+                            try
+                            {
+                                convertedArgs[i] = Convert.ChangeType(args[i], parameterType);
+                            }
+                            catch
+                            {
+                                match = false;
+
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            convertedArgs[i] = args[i];
+                        }
+                    }
+
+                    if (match)
+                    {
+                        return constructor.Invoke(convertedArgs);
+                    }
+                }
+            }
+
+            throw new ArgumentException("Type '" + typeName + "' could not be constructed.");
         }
 
 #if AOT
@@ -1327,10 +1387,8 @@ namespace OpenTibia.Game.Common.ServerObjects
         }
 
         /// <exception cref="ArgumentException"></exception>
-#if AOT
-        [RequiresUnreferencedCode("Used by lua.RegisterFunction.")]
-#endif
-        public Light ToLight(object arg)
+
+        private Light ToLight(object arg)
         {
             if (arg == null)
             {
@@ -1351,10 +1409,8 @@ namespace OpenTibia.Game.Common.ServerObjects
         }
 
         /// <exception cref="ArgumentException"></exception>
-#if AOT
-        [RequiresUnreferencedCode("Used by lua.RegisterFunction.")]
-#endif
-        public Outfit ToOutfit(object arg)
+
+        private Outfit ToOutfit(object arg)
         {
             if (arg == null)
             {
@@ -1419,10 +1475,8 @@ namespace OpenTibia.Game.Common.ServerObjects
         }
 
         /// <exception cref="ArgumentException"></exception>
-#if AOT
-        [RequiresUnreferencedCode("Used by lua.RegisterFunction.")]
-#endif
-        public Position ToPosition(object arg)
+
+        private Position ToPosition(object arg)
         {
             if (arg == null)
             {
@@ -1484,10 +1538,8 @@ namespace OpenTibia.Game.Common.ServerObjects
         }
 
         /// <exception cref="ArgumentException"></exception>
-#if AOT
-        [RequiresUnreferencedCode("Used by lua.RegisterFunction.")]
-#endif
-        public Tile ToTile(object arg)
+
+        private Tile ToTile(object arg)
         {
             if (arg == null)
             {

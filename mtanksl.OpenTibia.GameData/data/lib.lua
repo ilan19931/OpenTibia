@@ -414,6 +414,25 @@ waricon = {
     blue = 3
 }
 
+LIGHT = "OpenTibia.Common.Structures.Light, mtanksl.OpenTibia.Common"
+OUTFIT = "OpenTibia.Common.Structures.Outfit, mtanksl.OpenTibia.Common"
+POSITION = "OpenTibia.Common.Structures.Position, mtanksl.OpenTibia.Common"
+
+function converttolight(table)
+	return new(LIGHT, table.level, table.color)
+end
+
+function converttooutfit(table)
+	if table.tibiaid then
+		return new(OUTFIT, table.tibiaid)
+	end
+	return new(OUTFIT, table.id, table.head, table.body, table.legs, table.feet, table.addon, table.mount)
+end
+
+function converttoposition(table)
+	return new(POSITION, table.x, table.y, table.z)
+end
+
 attack = {
 	damage = function(projectiletype, magiceffecttype, damagetype, min, max, blockable)
 		return { type = "damage", projectiletype = projectiletype, magiceffecttype = magiceffecttype, damagetype = damagetype, min = min, max = max, blockable = blockable }

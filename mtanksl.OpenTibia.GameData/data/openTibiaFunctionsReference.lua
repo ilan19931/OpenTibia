@@ -20,6 +20,13 @@ return {
 		args = "(object obj, string typeName)",
 		returns = "object"
 	},
+	-- object new(string typeName, params object[] args)
+	new = {
+		type = "function",
+		description = "",
+		args = "(string typeName, params object[] args)",
+		returns = "object"
+	},
 	-- object getconfig(string file, string key)
 	getconfig = {
 		type = "function",
@@ -34,35 +41,32 @@ return {
 		args = "(string relativePath)",
 		returns = "string"
 	},
-	-- Light tolight( { level = 0, color = 0 } )
-	tolight = {
+
+
+	-- Light converttolight( { level = 0, color = 0 } )
+	converttolight = {
 		type = "function",
 		description = "",
-		args = "(object arg)",
+		args = "(LuaTable table)",
 		returns = "Light"
 	},	
-	-- Outfit tooutfit( { tibiaid = 0 } )
-	-- Outfit tooutfit( { id = 0, head = 0, body = 0, legs = 0, feet = 0, addon = 0, mount = 0 } )
-	tooutfit = {
+	-- Outfit converttooutfit( { tibiaid = 0 } )
+	-- Outfit converttooutfit( { id = 0, head = 0, body = 0, legs = 0, feet = 0, addon = 0, mount = 0 } )
+	converttooutfit = {
 		type = "function",
 		description = "",
-		args = "(object arg)",
+		args = "(LuaTable table)",
 		returns = "Outfit"
 	},
-	-- Position toposition( { x = 0, y = 0, z = 0 } )
-	toposition = {
+	-- Position converttoposition( { x = 0, y = 0, z = 0 } )
+	converttoposition = {
 		type = "function",
 		description = "",
-		args = "(object arg)",
+		args = "(LuaTable table)",
 		returns = "Position"
 	},
-	-- Tile totile( { x = 0, y = 0, z = 0 } )
-	totile = {
-		type = "function",
-		description = "",
-		args = "(object arg)",
-		returns = "Tile"
-	},
+
+
 	-- void registerplugin(string nodeType, LuaTable parameters)
 	registerplugin = {
 		type = "function",

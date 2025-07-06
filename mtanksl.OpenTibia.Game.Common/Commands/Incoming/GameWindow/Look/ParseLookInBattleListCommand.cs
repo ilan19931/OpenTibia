@@ -24,7 +24,7 @@ namespace OpenTibia.Game.Commands
                 }
             }
 
-            throw new System.NotImplementedException();
+            return Promise.Break;
         }
     }
 }
