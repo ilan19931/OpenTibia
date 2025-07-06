@@ -85,21 +85,22 @@ namespace OpenTibia.Game.Common.ServerObjects
                 throw new ObjectDisposedException(nameof(PluginLoader));
             }
 
-            string[] split = typeName.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-            if (split.Length == 1)
+            if (typeName.Contains(',') )
             {
-                return Type.GetType(split[0] );
+                string[] split = typeName.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                if (split.Length == 2)
+                {
+                    Assembly assembly = GetAssembly(split[1] );
+
+                    if (assembly != null)
+                    {
+                        return assembly.GetType(split[0] );
+                    }
+                }
             }
 
-            Assembly assembly = GetAssembly(split[1] );
-
-            if (assembly != null)
-            {
-                return assembly.GetType(split[0] );
-            }
-
-            return null;
+            return Type.GetType(typeName);
         }
 
         /// <exception cref="ObjectDisposedException"></exception>

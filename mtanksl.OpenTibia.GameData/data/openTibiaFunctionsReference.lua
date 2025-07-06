@@ -1,9 +1,9 @@
 return {
-	-- void print(params object[] parameters)
+	-- void print(params object[] values)
 	print = {
 		type = "function",
 		description = "",
-		args = "(params object[] parameters)",
+		args = "(params object[] values)",
 		returns = "void"
 	},
 	-- string typeof(object obj)
@@ -13,7 +13,7 @@ return {
 		args = "(object obj)",
 		returns = "string"
 	},
-	-- object cast(object obj, string typeName)
+	-- object cast(string typeName, object obj)
 	cast = {
 		type = "function",
 		description = "",
@@ -33,6 +33,35 @@ return {
 		description = "",
 		args = "(string relativePath)",
 		returns = "string"
+	},
+	-- Light tolight( { level = 0, color = 0 } )
+	tolight = {
+		type = "function",
+		description = "",
+		args = "(object arg)",
+		returns = "Light"
+	},	
+	-- Outfit tooutfit( { tibiaid = 0 } )
+	-- Outfit tooutfit( { id = 0, head = 0, body = 0, legs = 0, feet = 0, addon = 0, mount = 0 } )
+	tooutfit = {
+		type = "function",
+		description = "",
+		args = "(object arg)",
+		returns = "Outfit"
+	},
+	-- Position toposition( { x = 0, y = 0, z = 0 } )
+	toposition = {
+		type = "function",
+		description = "",
+		args = "(object arg)",
+		returns = "Position"
+	},
+	-- Tile totile( { x = 0, y = 0, z = 0 } )
+	totile = {
+		type = "function",
+		description = "",
+		args = "(object arg)",
+		returns = "Tile"
 	},
 	-- void registerplugin(string nodeType, LuaTable parameters)
 	registerplugin = {

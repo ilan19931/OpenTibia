@@ -420,6 +420,12 @@ attack = {
 	end,
 	healing = function(min, max)
 		return { type = "healing", min = min, max = max }
+	end,
+	cancelinvisibility = function()
+		return { type = "cancelinvisibility" }
+	end,
+	challenge = function()
+		return { type = "challenge" }
 	end
 }
 

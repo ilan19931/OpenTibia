@@ -48,6 +48,14 @@ namespace OpenTibia.Game.Common.ServerObjects
 
             lua.RegisterFunction("getfullpath", this, GetType().GetMethod(nameof(GetFullPath) ) );
 
+            lua.RegisterFunction("tolight", this, GetType().GetMethod(nameof(ToLight) ) );
+
+            lua.RegisterFunction("tooutfit", this, GetType().GetMethod(nameof(ToOutfit) ) );
+
+            lua.RegisterFunction("toposition", this, GetType().GetMethod(nameof(ToPosition) ) );
+
+            lua.RegisterFunction("totile", this, GetType().GetMethod(nameof(ToTile) ) );
+
             lua.RegisterCoFunction("registerplugin", (luaScope, args) =>
             {
                 string nodeType = LuaScope.GetString(args[0] );
@@ -219,7 +227,7 @@ namespace OpenTibia.Game.Common.ServerObjects
                 {
                     // string command.eventhandler(GameObject gameObject, string eventName, Action<GameEventArgs> callback)
 
-                    MultipleEventHandlerBehaviour multipleEventHandlerBehaviour = Context.Current.Server.GameObjectComponents.AddComponent( (GameObject)args[0], new MultipleEventHandlerBehaviour(Type.GetType(LuaScope.GetString(args[1] ) ), (context, e) =>
+                    MultipleEventHandlerBehaviour multipleEventHandlerBehaviour = Context.Current.Server.GameObjectComponents.AddComponent( (GameObject)args[0], new MultipleEventHandlerBehaviour(server.PluginLoader.GetType(LuaScope.GetString(args[1] ) ), (context, e) =>
                     {
                         return luaScope.CallFunction( (LuaFunction)args[2], e); // Ignore result
 
@@ -231,7 +239,7 @@ namespace OpenTibia.Game.Common.ServerObjects
                 {
                     // string command.eventhandler(string eventName, Action<GameEventArgs> callback)
 
-                    Guid key = Context.Current.Server.EventHandlers.Subscribe(Type.GetType(LuaScope.GetString(args[0] ) ), (context, e) =>
+                    Guid key = Context.Current.Server.EventHandlers.Subscribe(server.PluginLoader.GetType(LuaScope.GetString(args[0] ) ), (context, e) =>
                     {
                         return luaScope.CallFunction( (LuaFunction)args[1], e); // Ignore result
                     } );
@@ -253,7 +261,7 @@ namespace OpenTibia.Game.Common.ServerObjects
                 {
                     // string command.gameobjecteventhandler(GameObject gameObject, GameObject eventSource, string eventName, Action<GameEventArgs> callback)
 
-                    MultipleGameObjectEventHandlerBehaviour multipleEventHandlerBehaviour = Context.Current.Server.GameObjectComponents.AddComponent( (GameObject)args[0], new MultipleGameObjectEventHandlerBehaviour( (GameObject)args[1], Type.GetType(LuaScope.GetString(args[2] ) ), (context, e) =>
+                    MultipleGameObjectEventHandlerBehaviour multipleEventHandlerBehaviour = Context.Current.Server.GameObjectComponents.AddComponent( (GameObject)args[0], new MultipleGameObjectEventHandlerBehaviour( (GameObject)args[1], server.PluginLoader.GetType(LuaScope.GetString(args[2] ) ), (context, e) =>
                     {
                         return luaScope.CallFunction( (LuaFunction)args[3], e); // Ignore result
 
@@ -265,7 +273,7 @@ namespace OpenTibia.Game.Common.ServerObjects
                 {
                     // string command.gameobjecteventhandler(GameObject eventSource, string eventName, Action<GameEventArgs> callback)
 
-                    Guid key = Context.Current.Server.GameObjectEventHandlers.Subscribe( (GameObject)args[0], Type.GetType(LuaScope.GetString(args[1] ) ), (context, e) =>
+                    Guid key = Context.Current.Server.GameObjectEventHandlers.Subscribe( (GameObject)args[0], server.PluginLoader.GetType(LuaScope.GetString(args[1] ) ), (context, e) =>
                     {
                         return luaScope.CallFunction( (LuaFunction)args[2], e); // Ignore result
                     } );
@@ -287,7 +295,7 @@ namespace OpenTibia.Game.Common.ServerObjects
                 {
                     // string command.positionaleventhandler(GameObject gameObject, GameObject observer, string eventName, Action<GameEventArgs> callback)
 
-                    MultiplePositionalEventHandlerBehaviour multipleEventHandlerBehaviour = Context.Current.Server.GameObjectComponents.AddComponent( (GameObject)args[0], new MultiplePositionalEventHandlerBehaviour( (GameObject)args[1], Type.GetType(LuaScope.GetString(args[2] ) ), (context, e) =>
+                    MultiplePositionalEventHandlerBehaviour multipleEventHandlerBehaviour = Context.Current.Server.GameObjectComponents.AddComponent( (GameObject)args[0], new MultiplePositionalEventHandlerBehaviour( (GameObject)args[1], server.PluginLoader.GetType(LuaScope.GetString(args[2] ) ), (context, e) =>
                     {
                         return luaScope.CallFunction( (LuaFunction)args[3], e); // Ignore result
 
@@ -299,7 +307,7 @@ namespace OpenTibia.Game.Common.ServerObjects
                 {
                     // string command.positionaleventhandler(GameObject observer, string eventName, Action<GameEventArgs> callback)
 
-                    Guid key = Context.Current.Server.PositionalEventHandlers.Subscribe( (GameObject)args[0], Type.GetType(LuaScope.GetString(args[1] ) ), (context, e) =>
+                    Guid key = Context.Current.Server.PositionalEventHandlers.Subscribe( (GameObject)args[0], server.PluginLoader.GetType(LuaScope.GetString(args[1] ) ), (context, e) =>
                     {
                         return luaScope.CallFunction( (LuaFunction)args[2], e); // Ignore result
                     } );
@@ -1121,7 +1129,7 @@ namespace OpenTibia.Game.Common.ServerObjects
 
             lua.RegisterCoFunction("tileaddcreature", (luaScope, args) =>
             {
-                return Context.Current.AddCommand(new TileAddCreatureCommand( (Tile)args[0], (Creature)args[1] ) ).Then( () =>
+                return Context.Current.AddCommand(new TileAddCreatureCommand(ToTile(args[0] ), (Creature)args[1] ) ).Then( () =>
                 {
                     return Promise.FromResultAsEmptyObjectArray;
                 } );
@@ -1129,7 +1137,7 @@ namespace OpenTibia.Game.Common.ServerObjects
 
             lua.RegisterCoFunction("tileadditem", (luaScope, args) =>
             {
-                return Context.Current.AddCommand(new TileAddItemCommand( (Tile)args[0], (Item)args[1] ) ).Then( () =>
+                return Context.Current.AddCommand(new TileAddItemCommand(ToTile(args[0] ), (Item)args[1] ) ).Then( () =>
                 {
                     return Promise.FromResultAsEmptyObjectArray;
                 } );
@@ -1137,7 +1145,7 @@ namespace OpenTibia.Game.Common.ServerObjects
 
             lua.RegisterCoFunction("tilecreateitem", (luaScope, args) =>
             {
-                return Context.Current.AddCommand(new TileCreateItemCommand( (Tile)args[0], LuaScope.GetUInt16(args[1] ), LuaScope.GetByte(args[2] ) ) ).Then( (item) =>
+                return Context.Current.AddCommand(new TileCreateItemCommand(ToTile(args[0] ), LuaScope.GetUInt16(args[1] ), LuaScope.GetByte(args[2] ) ) ).Then( (item) =>
                 {
                     return Promise.FromResult(new object[] { item } );
                 } );
@@ -1145,7 +1153,7 @@ namespace OpenTibia.Game.Common.ServerObjects
 
             lua.RegisterCoFunction("tilecreateitemorincrement", (luaScope, args) =>
             {
-                return Context.Current.AddCommand(new TileCreateItemOrIncrementCommand( (Tile)args[0], LuaScope.GetUInt16(args[1] ), LuaScope.GetByte(args[2] ) ) ).Then( () =>
+                return Context.Current.AddCommand(new TileCreateItemOrIncrementCommand(ToTile(args[0] ), LuaScope.GetUInt16(args[1] ), LuaScope.GetByte(args[2] ) ) ).Then( () =>
                 {
                     return Promise.FromResultAsEmptyObjectArray;
                 } );
@@ -1153,7 +1161,7 @@ namespace OpenTibia.Game.Common.ServerObjects
 
             lua.RegisterCoFunction("tilecreatemonster", (luaScope, args) =>
             {
-                return Context.Current.AddCommand(new TileCreateMonsterCommand( (Tile)args[0], LuaScope.GetString(args[1] ) ) ).Then( (monster) =>
+                return Context.Current.AddCommand(new TileCreateMonsterCommand(ToTile(args[0] ), LuaScope.GetString(args[1] ) ) ).Then( (monster) =>
                 {
                     return Promise.FromResult(new object[] { monster } );
                 } );
@@ -1161,7 +1169,7 @@ namespace OpenTibia.Game.Common.ServerObjects
 
             lua.RegisterCoFunction("tilecreatenpc", (luaScope, args) =>
             {
-                return Context.Current.AddCommand(new TileCreateNpcCommand( (Tile)args[0], LuaScope.GetString(args[1] ) ) ).Then( (npc) =>
+                return Context.Current.AddCommand(new TileCreateNpcCommand(ToTile(args[0] ), LuaScope.GetString(args[1] ) ) ).Then( (npc) =>
                 {
                     return Promise.FromResult(new object[] { npc } );
                 } );
@@ -1169,7 +1177,7 @@ namespace OpenTibia.Game.Common.ServerObjects
 
             lua.RegisterCoFunction("tileremovecreature", (luaScope, args) =>
             {
-                return Context.Current.AddCommand(new TileRemoveCreatureCommand ( (Tile)args[0], (Creature)args[1] ) ).Then( () =>
+                return Context.Current.AddCommand(new TileRemoveCreatureCommand(ToTile(args[0] ), (Creature)args[1] ) ).Then( () =>
                 {
                     return Promise.FromResultAsEmptyObjectArray;
                 } );
@@ -1177,7 +1185,7 @@ namespace OpenTibia.Game.Common.ServerObjects
 
             lua.RegisterCoFunction("tileremoveitem", (luaScope, args) =>
             {
-                return Context.Current.AddCommand(new TileRemoveItemCommand ( (Tile)args[0], (Item)args[1] ) ).Then( () =>
+                return Context.Current.AddCommand(new TileRemoveItemCommand(ToTile(args[0] ), (Item)args[1] ) ).Then( () =>
                 {
                     return Promise.FromResultAsEmptyObjectArray;
                 } );
@@ -1185,7 +1193,7 @@ namespace OpenTibia.Game.Common.ServerObjects
 
             lua.RegisterCoFunction("tilereplaceitem", (luaScope, args) =>
             {
-                return Context.Current.AddCommand(new TileReplaceItemCommand( (Tile)args[0], (Item)args[1], (Item)args[2] ) ).Then( () =>
+                return Context.Current.AddCommand(new TileReplaceItemCommand(ToTile(args[0] ), (Item)args[1], (Item)args[2] ) ).Then( () =>
                 {
                     return Promise.FromResultAsEmptyObjectArray;
                 } );
@@ -1244,9 +1252,9 @@ namespace OpenTibia.Game.Common.ServerObjects
 #if AOT
         [RequiresUnreferencedCode("Used by lua.RegisterFunction.")]
 #endif
-        public void Print(params object[] parameters)
+        public void Print(params object[] values)
         {
-            server.Logger.WriteLine(string.Join("\t", parameters), LogLevel.Information);
+            server.Logger.WriteLine(string.Join("\t", values), LogLevel.Information);
         }
 
 #if AOT
@@ -1260,7 +1268,7 @@ namespace OpenTibia.Game.Common.ServerObjects
 #if AOT
         [RequiresUnreferencedCode("Used by lua.RegisterFunction.")]
 #endif
-        public object Cast(object obj, string typeName)
+        public object Cast(string typeName, object obj)
         {
             return Convert.ChangeType(obj, server.PluginLoader.GetType(typeName) );
         }
@@ -1317,49 +1325,49 @@ namespace OpenTibia.Game.Common.ServerObjects
         {
             return server.PathResolver.GetFullPath(relativePath);
         }
-        
+
         /// <exception cref="ArgumentException"></exception>
-       
-        private Light ToLight(object parameter)
+#if AOT
+        [RequiresUnreferencedCode("Used by lua.RegisterFunction.")]
+#endif
+        public Light ToLight(object arg)
         {
-            if (parameter == null)
+            if (arg == null)
             {
                 return null;
             }
 
-            if (parameter is Light)
+            if (arg is Light)
             {
-                return (Light)parameter;
+                return (Light)arg;
             }
             
-            if (parameter is LuaTable)
+            if (arg is LuaTable table)
             {
-                LuaTable table = (LuaTable)parameter;
-
                 return new Light(LuaScope.GetByte(table["level"] ), LuaScope.GetByte(table["color"] ) );
             }
          
-            throw new ArgumentException("Parameter must be Light or LuaTable with level and color.");
+            throw new ArgumentException("Arg must be Light or LuaTable with level and color.");
         }
 
         /// <exception cref="ArgumentException"></exception>
-
-        private Outfit ToOutfit(object parameter)
+#if AOT
+        [RequiresUnreferencedCode("Used by lua.RegisterFunction.")]
+#endif
+        public Outfit ToOutfit(object arg)
         {
-            if (parameter == null)
+            if (arg == null)
             {
                 return null;
             }
 
-            if (parameter is Outfit)
+            if (arg is Outfit)
             {
-                return (Outfit)parameter;
+                return (Outfit)arg;
             }
             
-            if (parameter is LuaTable)
+            if (arg is LuaTable table)
             {
-                LuaTable table = (LuaTable)parameter;
-
                 if (table["tibiaid"] != null)
                 {
                     return new Outfit(LuaScope.GetUInt16(table["tibiaid"] ) );
@@ -1368,67 +1376,65 @@ namespace OpenTibia.Game.Common.ServerObjects
                 return new Outfit(LuaScope.GetUInt16(table["id"] ), LuaScope.GetByte(table["head"] ), LuaScope.GetByte(table["body"] ), LuaScope.GetByte(table["legs"] ), LuaScope.GetByte(table["feet"] ), (Addon)(long)table["addon"], LuaScope.GetUInt16(table["mount"] ) );
             }
          
-            throw new ArgumentException("Parameter must be Outfit or LuaTable with itemid or with id, head, body, legs, feet and addon.");
+            throw new ArgumentException("Arg must be Outfit or LuaTable with itemid or with id, head, body, legs, feet and addon.");
         }
 
         /// <exception cref="ArgumentException"></exception>
 
-        private Offset ToOffset(object parameter)
+        private Offset ToOffset(object arg)
         {
-            if (parameter is Offset)
+            if (arg is Offset)
             {
-                return (Offset)parameter;
+                return (Offset)arg;
             }
 
-            if (parameter is LuaTable)
+            if (arg is LuaTable table)
             {
-                LuaTable table = (LuaTable)parameter;
-
                 return new Offset(LuaScope.GetInt32(table[1] ), LuaScope.GetInt32(table[2] ) );
             }
             
-            throw new ArgumentException("Parameter must be Offset or LuaTable with two values, one for x and other for y.");
+            throw new ArgumentException("Arg must be Offset or LuaTable with two values, one for x and other for y.");
         }
 
         /// <exception cref="ArgumentException"></exception>
 
-        private Offset[] ToOffsetArray(object parameter)
+        private Offset[] ToOffsetArray(object arg)
         {
-            if (parameter == null)
+            if (arg == null)
             {
                 return null;
             }
 
-            if (parameter is Offset[] )
+            if (arg is Offset[] )
             {
-                return (Offset[] )parameter;
+                return (Offset[] )arg;
             }
 
-            if (parameter is LuaTable)
+            if (arg is LuaTable table)
             {
-                LuaTable table = (LuaTable)parameter;
-
                 return table.Values.Cast<LuaTable>().Select(v => ToOffset(v) ).ToArray();
             }
 
-            throw new ArgumentException("Parameter must be array of Offset or array of LuaTable with two items, one for x and other for y.");
+            throw new ArgumentException("Arg must be array of Offset or array of LuaTable with two items, one for x and other for y.");
         }
 
         /// <exception cref="ArgumentException"></exception>
-
-        private Position ToPosition(object parameter)
+#if AOT
+        [RequiresUnreferencedCode("Used by lua.RegisterFunction.")]
+#endif
+        public Position ToPosition(object arg)
         {
-            if (parameter == null)
+            if (arg == null)
             {
                 return null;
             }
 
-            if (parameter is Position)
+            if (arg is Position)
             {
-                return (Position)parameter;
+                return (Position)arg;
             }
 
-            if (parameter is IContent content)
+            if (arg is IContent content)
             {
                 Position position = null;
 
@@ -1469,56 +1475,59 @@ namespace OpenTibia.Game.Common.ServerObjects
                 return position;
             }
 
-            if (parameter is LuaTable)
+            if (arg is LuaTable table)
             {
-                LuaTable table = (LuaTable)parameter;
-                
                 return new Position(LuaScope.GetInt32(table["x"] ), LuaScope.GetInt32(table["y"] ), LuaScope.GetInt32(table["z"] ) );
             }
          
-            throw new ArgumentException("Parameter must be Position or LuaTable with x, y and z.");
+            throw new ArgumentException("Arg must be Position or LuaTable with x, y and z.");
         }
 
         /// <exception cref="ArgumentException"></exception>
-
-        private Tile ToTile(object parameter)
+#if AOT
+        [RequiresUnreferencedCode("Used by lua.RegisterFunction.")]
+#endif
+        public Tile ToTile(object arg)
         {
-            if (parameter == null)
+            if (arg == null)
             {
                 return null;
             }
 
-            if (parameter is Tile)
+            if (arg is Tile)
             {
-                return (Tile)parameter;
+                return (Tile)arg;
             }
             
-            if (parameter is LuaTable)
+            if (arg is Position)
             {
-                return Context.Current.Server.Map.GetTile(ToPosition(parameter) );
+                return Context.Current.Server.Map.GetTile( (Position)arg);
             }
-         
-            throw new ArgumentException("Parameter must be Tile or LuaTable with x, y and z.");
+
+            if (arg is LuaTable)
+            {
+                return Context.Current.Server.Map.GetTile(ToPosition(arg) );
+            }
+
+            throw new ArgumentException("Arg must be Tile or LuaTable with x, y and z.");
         }
 
         /// <exception cref="ArgumentException"></exception>
 
-        private Attack ToAttack(object parameter)
+        private Attack ToAttack(object arg)
         {
-            if (parameter == null)
+            if (arg == null)
             {
                 return null;
             }
 
-            if (parameter is Attack)
+            if (arg is Attack)
             {
-                return (Attack)parameter;
+                return (Attack)arg;
             }
             
-            if (parameter is LuaTable)
+            if (arg is LuaTable table)
             {
-                LuaTable table = (LuaTable)parameter;
-
                 switch (LuaScope.GetString(table["type"] ) )
                 {
                     case "damage":
@@ -1528,30 +1537,36 @@ namespace OpenTibia.Game.Common.ServerObjects
                     case "healing":
                     
                         return new HealingAttack(LuaScope.GetInt32(table["min"] ), LuaScope.GetInt32(table["max"] ) );
+
+                    case "cancelinvisibility":
+                    
+                        return new CancelInvisibilityAttack();
+
+                    case "challenge":
+                    
+                        return new ChallengeAttack();
                 }
             }
 
-            throw new ArgumentException("Parameter must be Attack or LuaTable with type, projectiletype, magiceffecttype, damagetype, min and/or max.");
+            throw new ArgumentException("Arg must be Attack or LuaTable with type, projectiletype, magiceffecttype, damagetype, min and/or max.");
         }
 
         /// <exception cref="ArgumentException"></exception>
 
-        private Condition ToCondition(object parameter)
+        private Condition ToCondition(object arg)
         {
-            if (parameter == null)
+            if (arg == null)
             {
                 return null;
             }
 
-            if (parameter is Condition)
+            if (arg is Condition)
             {
-                return (Condition)parameter;
+                return (Condition)arg;
             }
             
-            if (parameter is LuaTable)
+            if (arg is LuaTable table)
             {
-                LuaTable table = (LuaTable)parameter;
-
                 switch (LuaScope.GetString(table["type"] ) )
                 {
                     case "damage":
@@ -1600,7 +1615,7 @@ namespace OpenTibia.Game.Common.ServerObjects
                 }
             }
          
-            throw new ArgumentException("Parameter must be Condition or LuaTable with type, specialcondition, magiceffecttype, animatedtextcolor, damages, interval, damage, conditionspeed, duration, conditionlight and/or conditionoutfit.");
+            throw new ArgumentException("Arg must be Condition or LuaTable with type, specialcondition, magiceffecttype, animatedtextcolor, damages, interval, damage, conditionspeed, duration, conditionlight and/or conditionoutfit.");
         }
 
         public string GetChunk(string path)
