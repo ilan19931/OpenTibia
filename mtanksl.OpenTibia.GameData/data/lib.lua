@@ -32,6 +32,11 @@ channelflag = {
 	help = 128
 }
 
+chasemode = {
+    standwhilefighting = 0,
+    chaseopponent = 1
+}
+
 conditionspecialcondition = {
 	none = 0,
 	poisoned = 1,
@@ -339,11 +344,23 @@ projectiletype = {
     simplearrow = 54
 }
 
+pvpmode = {
+    whitedove = 0,
+    whitehand = 1,
+    yellowhand = 2,
+    redfist = 3
+}
+
 rank = {
 	player = 0,
 	tutor = 1,
 	gamemaster = 2,
 	accountmanager = 3
+}
+
+safemode = {
+    youcanattackanycharacter = 0,
+    youcannotattackunmarkedcharacter = 1
 }
 
 skill = {
@@ -393,6 +410,20 @@ speechbubble = {
 	trade = 2,
 	quest = 3,
 	questtrader = 4
+}
+
+slot = {
+	hotkey = 0,
+	head = 1,
+	necklace = 2,
+	backpack = 3,
+	body = 4,
+	right = 5,
+	left = 6,
+	legs = 7,
+	feet = 8,
+	ring = 9,
+	ammo = 10
 }
 
 vocation = {

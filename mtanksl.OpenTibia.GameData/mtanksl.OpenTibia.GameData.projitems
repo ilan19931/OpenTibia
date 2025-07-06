@@ -44,6 +44,7 @@
     <None Include="$(MSBuildThisFileDirectory)data\plugins\players\lib.lua" />
     <None Include="$(MSBuildThisFileDirectory)data\plugins\raids\rats.lua" />
     <None Include="$(MSBuildThisFileDirectory)data\plugins\raids\lib.lua" />
+    <None Include="$(MSBuildThisFileDirectory)data\plugins\scripts\teleport.lua" />
     <None Include="$(MSBuildThisFileDirectory)data\plugins\scripts\npcs\suzy.lua" />
     <None Include="$(MSBuildThisFileDirectory)data\vocations\config.lua" />
     <None Include="$(MSBuildThisFileDirectory)data\vocations\lib.lua" />
