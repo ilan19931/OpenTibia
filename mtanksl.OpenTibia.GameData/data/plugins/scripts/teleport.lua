@@ -1,5 +1,7 @@
 ﻿local checkpointposition = nil
 
+-- /cp - Set a checkpoint
+
 registertalkactionsplayersay("/cp", function(player, message)
 	if cast("System.Int64", player.Rank) == rank.gamemaster then
 		checkpointposition = player.Tile.Position
@@ -8,6 +10,9 @@ registertalkactionsplayersay("/cp", function(player, message)
 	end
 	return false
 end)
+
+-- /tp - Create a teleport
+-- /tp [seconds] - Create a teleport that will disappear after n seconds
 
 registertalkactionsplayersay("/tp", function(player, message)
 	if cast("System.Int64", player.Rank) == rank.gamemaster then
@@ -20,9 +25,7 @@ registertalkactionsplayersay("/tp", function(player, message)
 				command.showmagiceffect(position, magiceffecttype.blueshimmer)
 				local space = string.find(message, " ")
 				if space then
-					local argument = string.sub(message, space + 1) -- 1
-					message = string.sub(message, 1, space - 1) -- /tp
-					local seconds = tonumber(argument)
+					local seconds = tonumber(string.sub(message, space + 1))
 					if seconds and seconds > 0 then
 						function loop(seconds)
 							if seconds > 0 then						
@@ -31,7 +34,7 @@ registertalkactionsplayersay("/tp", function(player, message)
 									loop(seconds - 1)
 								end)
 							else
-								command.showmagiceffect(position, magiceffecttype.puff)
+								command.showmagiceffect(player, magiceffecttype.puff)
 								command.itemdestroy(item)
 							end
 						end
@@ -39,11 +42,11 @@ registertalkactionsplayersay("/tp", function(player, message)
 					end
 				end
 			else
-				command.showmagiceffect(position, magiceffecttype.puff)
+				command.showmagiceffect(player, magiceffecttype.puff)
 			end
 		else
-			command.showwindowtext(player, messagemode.failure, "Use /cp to set a checkpoint then /tp to create a teleport")
-			command.showmagiceffect(position, magiceffecttype.puff)
+			command.showwindowtext(player, messagemode.failure, "Use '/cp' to set a checkpoint, then '/tp [seconds]' to create a teleport.")
+			command.showmagiceffect(player, magiceffecttype.puff)
 		end
 		return true -- handled, stop process
 	end
