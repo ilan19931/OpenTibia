@@ -19,7 +19,7 @@ registertalkactionsplayersay("/gc", function(player, message)
 			local tile = command.mapgettile(checkpointposition)
 			command.showmagiceffect(player, magiceffecttype.puff)
 			command.creaturemove(player, tile)
-			command.showmagiceffect(tile.Position, magiceffecttype.teleport)
+			command.showmagiceffect(player, magiceffecttype.teleport)
 		else
 			command.showwindowtext(player, messagemode.failure, "Use '/cp' to set a checkpoint, then '/gc' to return to a checkpoint.")
 			command.showmagiceffect(player, magiceffecttype.puff)

@@ -38,7 +38,11 @@ end)
 
 registertalkactionsplayersay("!poll", function(player, message)
 	if poll then
-		command.showwindowtext(player, messagemode.warning, "Poll '" .. poll.question .. "' is running. Cast your vote with the command '!vote yes' or '!vote no'.")
+		if cast("System.Int64", player.Rank) == rank.gamemaster then
+			command.showwindowtext(player, messagemode.warning, "Poll '" .. poll.question .. "' is running with '" .. poll.options.yes .. " votes yes' and '" .. poll.options.no .. " votes no'. Cast your vote with the command '!vote yes' or '!vote no'.")
+		else
+			command.showwindowtext(player, messagemode.warning, "Poll '" .. poll.question .. "' is running. Cast your vote with the command '!vote yes' or '!vote no'.")
+		end
 	else
 		command.showwindowtext(player, messagemode.failure, "Poll is not running.")
 		command.showmagiceffect(player, magiceffecttype.puff)		
