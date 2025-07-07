@@ -5,7 +5,25 @@
 registertalkactionsplayersay("/cp", function(player, message)
 	if cast("System.Int64", player.Rank) == rank.gamemaster then
 		checkpointposition = player.Tile.Position
-		command.showmagiceffect(checkpointposition, magiceffecttype.blueshimmer)
+		command.showmagiceffect(player, magiceffecttype.blueshimmer)
+		return true -- handled, stop process
+	end
+	return false
+end)
+
+-- /gc - Return to a checkpoint
+
+registertalkactionsplayersay("/gc", function(player, message)
+	if cast("System.Int64", player.Rank) == rank.gamemaster then
+		if checkpointposition then
+			local tile = command.mapgettile(checkpointposition)
+			command.showmagiceffect(player, magiceffecttype.puff)
+			command.creaturemove(player, tile)
+			command.showmagiceffect(tile.Position, magiceffecttype.teleport)
+		else
+			command.showwindowtext(player, messagemode.failure, "Use '/cp' to set a checkpoint, then '/gc' to return to a checkpoint.")
+			command.showmagiceffect(player, magiceffecttype.puff)
+		end
 		return true -- handled, stop process
 	end
 	return false
