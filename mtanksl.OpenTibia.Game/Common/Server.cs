@@ -490,6 +490,8 @@ namespace OpenTibia.Game.Common
                             {
                                 if (dbHouse.Owner != null)
                                 {
+                                    house.OwnerId = dbHouse.OwnerId;
+
                                     house.Owner = dbHouse.Owner.Name;
                                 }
 
@@ -885,12 +887,18 @@ namespace OpenTibia.Game.Common
                                     {
                                         dbHouse = new DbHouse()
                                         {
-                                            Id = house.Id
+                                            Id = house.Id,
+
+                                            OwnerId = house.OwnerId
                                         };
 
                                         database.HouseRepository.AddHouse(dbHouse);
                                     }
-                                                          
+                                    else
+                                    {
+                                        dbHouse.OwnerId = house.OwnerId;
+                                    }
+
                                     dbHouse.HouseAccessLists.Clear();
 
                                     HouseAccessList subOwnersList = house.GetSubOwnersList();

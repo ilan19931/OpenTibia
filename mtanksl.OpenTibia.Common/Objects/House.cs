@@ -46,6 +46,8 @@ namespace OpenTibia.Common.Objects
             return IsOwner(playerName) || IsSubOwner(playerName) || CanOpenDoor(doorItem.DoorId, playerName);
         }
 
+        public int? OwnerId { get; set; }
+
         public string Owner { get; set; }
 
         public bool IsOwner(string playerName)

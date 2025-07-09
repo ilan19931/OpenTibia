@@ -245,7 +245,7 @@ namespace OpenTibia.Game.Commands
                     }
                     else
                     {
-                        descriptions.Add("It belongs to house '" + houseTile.House.Name + "'. Nobody owns this house. It costs " + (houseTile.House.Rent * 5) + " gold coins.");
+                        descriptions.Add("It belongs to house '" + houseTile.House.Name + "'. Nobody owns this house. It costs " + houseTile.House.Rent + " gold coins.");
                     }
                 }
             }

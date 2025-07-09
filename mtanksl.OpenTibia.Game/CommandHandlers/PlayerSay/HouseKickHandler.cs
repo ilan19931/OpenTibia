@@ -3,7 +3,6 @@ using OpenTibia.Common.Structures;
 using OpenTibia.Game.Commands;
 using OpenTibia.Game.Common;
 using System;
-using System.Linq;
 
 namespace OpenTibia.Game.CommandHandlers
 {

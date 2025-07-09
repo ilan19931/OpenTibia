@@ -21,6 +21,8 @@ namespace OpenTibia.Game.CommandHandlers
                     "!online",
                     "!serverinfo",
                     "!uptime",
+                    "!buyhouse",
+                    "!leavehouse"
                 };
 
                 if (Context.Server.Config.Rules != null)

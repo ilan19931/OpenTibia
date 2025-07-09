@@ -67,6 +67,10 @@ namespace OpenTibia.Game.Scripts
 
             Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new UptimeHandler() ); // !uptime
 
+            Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new BuyHouseHandler() ); // !buyhouse
+
+            Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new LeaveHouseHandler() ); // !leavehouse
+
             if (Context.Server.Config.Rules != null)
             {
                 Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new RulesHandler() ); // !rules
