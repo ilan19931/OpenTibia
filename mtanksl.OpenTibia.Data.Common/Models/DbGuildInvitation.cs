@@ -1,4 +1,6 @@
-﻿namespace OpenTibia.Data.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OpenTibia.Data.Models
 {
     public class DbGuildInvitation
     {
@@ -6,6 +8,8 @@
 
         public int PlayerId { get; set; }
 
+        [Required]
+        [StringLength(255)]
         public string RankName { get; set; }
 
 

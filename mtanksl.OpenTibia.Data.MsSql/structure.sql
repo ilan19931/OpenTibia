@@ -635,3 +635,14 @@ GO
 
 COMMIT;
 GO
+
+--
+
+BEGIN TRANSACTION;
+GO
+
+ALTER TABLE [Guilds] ADD [MessageOfTheDay] nvarchar(max) NULL;
+GO
+
+COMMIT;
+GO

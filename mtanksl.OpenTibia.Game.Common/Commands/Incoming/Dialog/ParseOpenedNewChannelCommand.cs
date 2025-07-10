@@ -29,91 +29,144 @@ namespace OpenTibia.Game.Commands
                 {
                     Guild guild = Context.Server.Guilds.GetGuildThatContainsMember(Player);
 
-                    if (guild == null)
+                    if (guild != null)
                     {
-                        return Promise.Break;
+                        if ( !channel.ContainerMember(Player) )
+                        {
+                            channel.AddMember(Player);
+                        }
+
+                        Context.AddPacket(Player, new OpenChannelOutgoingPacket(channel.Id, channel.Name) );
+
+                        if (guild.MessageOfTheDay != null)
+                        {
+                            Context.AddPacket(Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, guild.Name + " guild's message of the day: " + guild.MessageOfTheDay) );
+                        }
+
+                        return Promise.Completed;
                     }
                 }
                 else if (channel.Flags.Is(ChannelFlags.Party) && Context.Server.Features.HasFeatureFlag(FeatureFlag.PartyChannel) )
                 {
                     Party party = Context.Server.Parties.GetPartyThatContainsMember(Player);
 
-                    if (party == null)
+                    if (party != null)
                     {
-                        return Promise.Break;
+                        if ( !channel.ContainerMember(Player) )
+                        {
+                            channel.AddMember(Player);
+                        }
+
+                        Context.AddPacket(Player, new OpenChannelOutgoingPacket(channel.Id, channel.Name) );
+                     
+                        return Promise.Completed;
                     }
                 }               
                 else if (channel.Flags.Is(ChannelFlags.Tutor) )
                 {
-                    if (Player.Rank != Rank.Gamemaster && Player.Rank != Rank.Tutor)
+                    if (Player.Rank == Rank.Gamemaster || Player.Rank == Rank.Tutor)
                     {
-                        return Promise.Break;
+                        if ( !channel.ContainerMember(Player) )
+                        {
+                            channel.AddMember(Player);
+                        }
+
+                        Context.AddPacket(Player, new OpenChannelOutgoingPacket(channel.Id, channel.Name) );
+                 
+                        return Promise.Completed;
                     }
                 }
                 else if (channel.Flags.Is(ChannelFlags.RuleViolations) && Context.Server.Features.HasFeatureFlag(FeatureFlag.RuleViolationChannel) )
                 {
-                    if (Player.Rank != Rank.Gamemaster)
+                    if (Player.Rank == Rank.Gamemaster)
                     {
-                        return Promise.Break;
+                        if ( !channel.ContainerMember(Player) )
+                        {
+                            channel.AddMember(Player);
+                        }
+
+                        Context.AddPacket(Player, new OpenRuleViolationsChannelOutgoingPacket(channel.Id) );
+                    
+                        foreach (var ruleViolation in Context.Server.RuleViolations.GetRuleViolations() )
+                        {
+                            if (ruleViolation.Assignee == null)
+                            {
+                                Context.AddPacket(Player, new ShowTextOutgoingPacket(0, ruleViolation.Reporter.Name, ruleViolation.Reporter.Level, ruleViolation.Time, ruleViolation.Message) );
+                            }
+                        }
+
+                        return Promise.Completed;
                     }
                 }
                 else if (channel.Flags.Is(ChannelFlags.Gamemaster) )
                 {
-                    if (Player.Rank != Rank.Gamemaster)
+                    if (Player.Rank == Rank.Gamemaster)
                     {
-                        return Promise.Break;
+                        if ( !channel.ContainerMember(Player) )
+                        {
+                            channel.AddMember(Player);
+                        }
+
+                        Context.AddPacket(Player, new OpenChannelOutgoingPacket(channel.Id, channel.Name) );
+                    
+                        return Promise.Completed;
                     }
                 }
                 else if (channel.Flags.Is(ChannelFlags.Trade) )
                 {
-                    if (Player.Rank != Rank.Gamemaster && Player.Vocation == Vocation.None)
+                    if (Player.Rank == Rank.Gamemaster || Player.Vocation != Vocation.None)
                     {
-                        return Promise.Break;
+                        if ( !channel.ContainerMember(Player) )
+                        {
+                            channel.AddMember(Player);
+                        }
+
+                        Context.AddPacket(Player, new OpenChannelOutgoingPacket(channel.Id, channel.Name) );
+                      
+                        return Promise.Completed;
                     }
                 }
                 else if (channel.Flags.Is(ChannelFlags.TradeRookgaard) )
                 {
-                    if (Player.Rank != Rank.Gamemaster && Player.Vocation != Vocation.None)
+                    if (Player.Rank == Rank.Gamemaster || Player.Vocation == Vocation.None)
                     {
-                        return Promise.Break;
+                        if ( !channel.ContainerMember(Player) )
+                        {
+                            channel.AddMember(Player);
+                        }
+
+                        Context.AddPacket(Player, new OpenChannelOutgoingPacket(channel.Id, channel.Name) );
+                   
+                        return Promise.Completed;
                     }
                 }
                 else if (channel is PrivateChannel privateChannel)
                 {
-                    if ( !privateChannel.ContainerMember(Player) )
+                    if (!privateChannel.ContainerMember(Player))
                     {
-                        if ( !privateChannel.ContainsInvitation(Player) )
+                        if (!privateChannel.ContainsInvitation(Player))
                         {
                             return Promise.Break;
                         }
 
                         privateChannel.RemoveInvitation(Player);
-                    }
-                }
 
-                if ( !channel.ContainerMember(Player) )
-                {
-                    channel.AddMember(Player);
-                }
-
-                if (channel.Flags.Is(ChannelFlags.RuleViolations) )
-                {
-                    Context.AddPacket(Player, new OpenRuleViolationsChannelOutgoingPacket(channel.Id) );
-                    
-                    foreach (var ruleViolation in Context.Server.RuleViolations.GetRuleViolations() )
-                    {
-                        if (ruleViolation.Assignee == null)
-                        {
-                            Context.AddPacket(Player, new ShowTextOutgoingPacket(0, ruleViolation.Reporter.Name, ruleViolation.Reporter.Level, ruleViolation.Time, ruleViolation.Message) );
-                        }
+                        privateChannel.AddMember(Player);
                     }
+
+                    Context.AddPacket(Player, new OpenChannelOutgoingPacket(privateChannel.Id, privateChannel.Name));
+
+                    return Promise.Completed;
                 }
                 else
                 {
+                    if ( !channel.ContainerMember(Player) )
+                    {
+                        channel.AddMember(Player);
+                    }
+
                     Context.AddPacket(Player, new OpenChannelOutgoingPacket(channel.Id, channel.Name) );
                 }
-
-                return Promise.Completed;
             }
 
             return Promise.Break;

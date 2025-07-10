@@ -647,3 +647,11 @@ CREATE INDEX "IX_GuildMembers_PlayerId" ON "GuildMembers" ("PlayerId");
 CREATE INDEX "IX_Guilds_LeaderId" ON "Guilds" ("LeaderId");
 
 COMMIT;
+
+--
+
+BEGIN TRANSACTION;
+
+ALTER TABLE "Guilds" ADD "MessageOfTheDay" TEXT NULL;
+
+COMMIT;

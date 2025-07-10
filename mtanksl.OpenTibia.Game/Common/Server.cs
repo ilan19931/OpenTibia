@@ -490,6 +490,8 @@ namespace OpenTibia.Game.Common
 
                                 Name = dbGuild.Name,
 
+                                MessageOfTheDay = dbGuild.MessageOfTheDay,
+
                                 Leader = dbGuild.LeaderId
                             };
 
@@ -912,6 +914,8 @@ namespace OpenTibia.Game.Common
                                 {
                                     Name = guild.Name,
 
+                                    MessageOfTheDay = guild.MessageOfTheDay,
+
                                     LeaderId = guild.Leader,
 
                                     Members = guild.GetMembers().Select(m => new DbGuildMember()
@@ -939,6 +943,8 @@ namespace OpenTibia.Game.Common
                                 DbGuild dbGuild = dbGuilds.Where(g => g.Id == id).First();
 
                                 dbGuild.Name = guild.Name;
+
+                                dbGuild.MessageOfTheDay = guild.MessageOfTheDay;
 
                                 dbGuild.LeaderId = guild.Leader;
 

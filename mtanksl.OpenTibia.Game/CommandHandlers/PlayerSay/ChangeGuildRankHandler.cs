@@ -8,6 +8,7 @@ using System;
 
 namespace OpenTibia.Game.CommandHandlers
 {
+
     public class ChangeGuildRankHandler : CommandHandler<PlayerSayCommand>
     {
         public override Promise Handle(Func<Promise> next, PlayerSayCommand command)

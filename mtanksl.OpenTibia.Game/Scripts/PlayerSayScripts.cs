@@ -87,6 +87,10 @@ namespace OpenTibia.Game.Scripts
 
                 Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new ChangeGuildRankHandler() ); // !changeguildrank
 
+                Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new SetMotdGuildHandler() ); // !setmotdguild
+
+                Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new ClearMotdGuildHandler() ); // !clearmotdguild
+
                 Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new PassLeadershipGuildHandler() ); // !passleadershipguild
 
                 Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new JoinGuildHandler() ); // !joinguild

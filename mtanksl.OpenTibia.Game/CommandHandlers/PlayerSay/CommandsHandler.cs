@@ -71,8 +71,10 @@ namespace OpenTibia.Game.CommandHandlers
                     "!createguild <guild_name> - Create a guild",
                     "!inviteguild <player_name> <rank_name> - Invite player to join the guild",
                     "!excludeguild <player_name> - Exclude player or invitation from the guild",
+                    "!passleadershipguild <player_name> - Pass guild leadership to player",
                     "!changeguildrank <player_name> <rank_name> - Change player's guild rank",
-                    "!passleadershipguild <player_name> - Pass leadership to player",
+                    "!setmotdguild <message> - Set guild's message of the day",
+                    "!clearmotdguild - Clear guild's message of the day",
                     "!joinguild <guild_name> - Join a guild",
                     "!leaveguild - Leave the guild"
                 } );

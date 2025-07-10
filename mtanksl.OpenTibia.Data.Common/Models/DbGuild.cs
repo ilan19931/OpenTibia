@@ -11,6 +11,9 @@ namespace OpenTibia.Data.Models
         [StringLength(255)]
         public string Name { get; set; }
 
+        [StringLength(255)]
+        public string MessageOfTheDay { get; set; }
+
         public int LeaderId { get; set; }
 
 

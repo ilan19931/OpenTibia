@@ -34,7 +34,7 @@ namespace OpenTibia.Game.CommandHandlers
 
                         Context.Server.Guilds.AddGuild(guild);
 
-                        Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "Guild " + guild.Name + " has been created. Invite players with !inviteguild <player_name> <rank_name> command. Leave with !leaveguild command.") );
+                        Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "Guild " + guild.Name + " has been created. Invite players with !inviteguild <player_name> <rank_name> command. Disband with !leaveguild command.") );
 
                         return Promise.Completed;
                     }

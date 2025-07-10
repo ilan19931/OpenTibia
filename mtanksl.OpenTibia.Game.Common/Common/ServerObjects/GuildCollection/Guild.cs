@@ -9,6 +9,8 @@ namespace OpenTibia.Game.Common.ServerObjects
 
         public string Name { get; set; }
 
+        public string MessageOfTheDay { get; set; }
+
         public int /* databasePlayerId */ Leader { get; set; }
 
         public bool IsLeader(Player player)
