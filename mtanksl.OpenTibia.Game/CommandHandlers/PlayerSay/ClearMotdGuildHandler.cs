@@ -11,7 +11,7 @@ namespace OpenTibia.Game.CommandHandlers
     {
         public override Promise Handle(Func<Promise> next, PlayerSayCommand command)
         {
-            if (command.Message.StartsWith("!clearmotdguild ") )
+            if (command.Message.StartsWith("!clearmotdguild") )
             {
                 Guild guild = Context.Server.Guilds.GetGuildByLeader(command.Player);
 
