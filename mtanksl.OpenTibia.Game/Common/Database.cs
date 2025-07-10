@@ -88,6 +88,23 @@ namespace OpenTibia.Game.Common
             }
         }
 
+        private IGuildRepository guildRepository;
+
+        /// <exception cref="ObjectDisposedException"></exception>
+
+        public IGuildRepository GuildRepository
+        {
+            get
+            {
+                if (disposed)
+                {
+                    throw new ObjectDisposedException(nameof(Database) );
+                }
+
+                return guildRepository ?? (guildRepository = new GuildRepository(databaseContext) );
+            }
+        }
+
         private IHouseRepository houseRepository;
 
         /// <exception cref="ObjectDisposedException"></exception>

@@ -25,12 +25,32 @@ namespace OpenTibia.Game.Common.ServerObjects
         {
             guilds.Remove(guild);
         }
-            
+
+        public Guild GetGuildByName(string name)  
+        {
+             return GetGuilds()
+                .Where(g => g.Name == name)
+                .FirstOrDefault();
+        }
+
+        public Guild GetGuildByLeader(Player leader)
+        {
+            return GetGuilds()
+                .Where(g => g.IsLeader(leader) )
+                .FirstOrDefault();
+        }
+
         public Guild GetGuildThatContainsMember(Player player)
         {
             return GetGuilds()
-                .Where(c => c.ContainsMember(player) )
+                .Where(g => g.ContainsMember(player, out _) )
                 .FirstOrDefault();
+        }
+
+        public IEnumerable<Guild> GetGuildThatContainsInvitation(Player player)
+        {
+            return GetGuilds()
+                .Where(g => g.ContainsInvitation(player, out _) );
         }
 
         public IEnumerable<Guild> GetGuilds()

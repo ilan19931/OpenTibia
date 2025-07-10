@@ -214,5 +214,12 @@ namespace OpenTibia.Game.Common.ServerObjects
                 .Where(p => p.Name == name)
                 .FirstOrDefault();
         }
+
+        public Player GetPlayerByDatabasePlayerId(int databasePlayerId)
+        {
+            return GetPlayers()
+                .Where(p => p.DatabasePlayerId == databasePlayerId)
+                .FirstOrDefault();
+        }
     }
 }

@@ -589,3 +589,49 @@ GO
 
 COMMIT;
 GO
+
+--
+
+BEGIN TRANSACTION;
+GO
+
+CREATE TABLE [Guilds] (
+    [Id] int NOT NULL IDENTITY,
+    [Name] nvarchar(255) NOT NULL,
+    [LeaderId] int NOT NULL,
+    CONSTRAINT [PK_Guilds] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Guilds_Players_LeaderId] FOREIGN KEY ([LeaderId]) REFERENCES [Players] ([Id]) ON DELETE CASCADE
+);
+GO
+
+CREATE TABLE [GuildInvitations] (
+    [GuildId] int NOT NULL,
+    [PlayerId] int NOT NULL,
+    [RankName] nvarchar(max) NULL,
+    CONSTRAINT [PK_GuildInvitations] PRIMARY KEY ([GuildId], [PlayerId]),
+    CONSTRAINT [FK_GuildInvitations_Guilds_GuildId] FOREIGN KEY ([GuildId]) REFERENCES [Guilds] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_GuildInvitations_Players_PlayerId] FOREIGN KEY ([PlayerId]) REFERENCES [Players] ([Id]) ON DELETE CASCADE
+);
+GO
+
+CREATE TABLE [GuildMembers] (
+    [GuildId] int NOT NULL,
+    [PlayerId] int NOT NULL,
+    [RankName] nvarchar(max) NULL,
+    CONSTRAINT [PK_GuildMembers] PRIMARY KEY ([GuildId], [PlayerId]),
+    CONSTRAINT [FK_GuildMembers_Guilds_GuildId] FOREIGN KEY ([GuildId]) REFERENCES [Guilds] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_GuildMembers_Players_PlayerId] FOREIGN KEY ([PlayerId]) REFERENCES [Players] ([Id]) ON DELETE CASCADE
+);
+GO
+
+CREATE INDEX [IX_GuildInvitations_PlayerId] ON [GuildInvitations] ([PlayerId]);
+GO
+
+CREATE INDEX [IX_GuildMembers_PlayerId] ON [GuildMembers] ([PlayerId]);
+GO
+
+CREATE INDEX [IX_Guilds_LeaderId] ON [Guilds] ([LeaderId]);
+GO
+
+COMMIT;
+GO

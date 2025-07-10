@@ -29,7 +29,6 @@ registertalkactionsplayersay("/gc", function(player, message)
 	return false
 end)
 
--- /tp - Create a teleport
 -- /tp [seconds] - Create a teleport that will disappear after n seconds
 
 registertalkactionsplayersay("/tp", function(player, message)

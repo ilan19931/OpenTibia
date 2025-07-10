@@ -29,7 +29,7 @@ namespace OpenTibia.Game.Commands
 
                     if (guild != null)
                     {
-                        channels.Add(new ChannelDto(channelConfig.Id, guild.Name) );
+                        channels.Add(new ChannelDto(channelConfig.Id, channelConfig.Name) );
                     }
                 }
                 else if (channelConfig.Flags.Is(ChannelFlags.Party) )

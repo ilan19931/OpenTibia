@@ -11,7 +11,13 @@ namespace OpenTibia.Game.Common.ServerObjects
 
         void RemoveGuild(Guild guild);
 
+        Guild GetGuildByName(string name);
+
+        Guild GetGuildByLeader(Player leader);
+
         Guild GetGuildThatContainsMember(Player player);
+
+        IEnumerable<Guild> GetGuildThatContainsInvitation(Player player);
 
         IEnumerable<Guild> GetGuilds();
     }

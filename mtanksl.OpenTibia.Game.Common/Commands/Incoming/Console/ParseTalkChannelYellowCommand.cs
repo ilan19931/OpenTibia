@@ -67,11 +67,16 @@ namespace OpenTibia.Game.Commands
 
                         if (guild != null)
                         {
-                            ShowTextOutgoingPacket showTextOutgoingPacket = new ShowTextOutgoingPacket(Context.Server.Channels.GenerateStatementId(Player.DatabasePlayerId, Message), Player.Name, Player.Level, guild.IsLeader(Player.Name) || guild.IsViceLeader(Player.Name) ? MessageMode.ChannelHighlight : MessageMode.Channel, channel.Id, Message);
+                            ShowTextOutgoingPacket showTextOutgoingPacket = new ShowTextOutgoingPacket(Context.Server.Channels.GenerateStatementId(Player.DatabasePlayerId, Message), Player.Name, Player.Level, guild.IsLeader(Player) ? MessageMode.ChannelHighlight : MessageMode.Channel, channel.Id, Message);
 
-                            foreach (var observer in guild.GetMembers() )
+                            foreach (var item in guild.GetMembers() )
                             {
-                                Context.AddPacket(observer, showTextOutgoingPacket);
+                                Player observer = Context.Server.GameObjects.GetPlayerByDatabasePlayerId(item.Key);
+
+                                if (observer != null)
+                                {
+                                    Context.AddPacket(observer, showTextOutgoingPacket);
+                                }
                             }
                         }
                     }

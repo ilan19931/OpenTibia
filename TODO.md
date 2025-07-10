@@ -6,7 +6,6 @@
 	- Summon
 	- Convince
 - Bed
-- Guild
 - Party spells (Enchant Party, Heal Party, Protect Party, Train Party)
 - Party shared experience
 - X-Logging
@@ -73,6 +72,7 @@
 		- Database for storing VIPs
 	- Safe Trade
 	- Party
+	- Guild
 	- Fight (vs Player)
 		- PVP vs non-PVP configuration
 		- Skull 

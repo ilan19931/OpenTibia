@@ -21,18 +21,12 @@ namespace OpenTibia.Game.CommandHandlers
                     "!online",
                     "!serverinfo",
                     "!uptime",
-                    "!buyhouse",
-                    "!leavehouse"
+                    "!commands"
                 };
 
                 if (Context.Server.Config.Rules != null)
                 {
                     commands.Add("!rules");
-                }
-
-                if (command.Player.Rank == Rank.Gamemaster)
-                {
-                    commands.Add("!commands");
                 }
 
                 string message = "Available commands: " + string.Join(", ", commands);

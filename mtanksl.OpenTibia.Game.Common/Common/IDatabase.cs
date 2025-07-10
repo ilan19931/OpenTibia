@@ -14,6 +14,8 @@ namespace OpenTibia.Game.Common
 
         IDebugAssertRepository DebugAssertRepository { get; }
 
+        IGuildRepository GuildRepository { get; }
+
         IHouseRepository HouseRepository { get; }
 
         IRuleViolationReportRepository RuleViolationReportRepository { get; }

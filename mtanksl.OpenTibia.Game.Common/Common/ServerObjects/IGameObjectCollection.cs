@@ -34,5 +34,7 @@ namespace OpenTibia.Game.Common.ServerObjects
         IEnumerable<Player> GetPlayersByAccount(int databaseAccountId);
 
         Player GetPlayerByName(string name);
+
+        Player GetPlayerByDatabasePlayerId(int databasePlayerId);
     }
 }

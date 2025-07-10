@@ -55,7 +55,6 @@ namespace OpenTibia.Game.Scripts
 
                 gamemasterCommandHandler.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new TeleportToWaypointHandler() ); // /w           (alani)
 
-                gamemasterCommandHandler.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new CommandsHandler() ); // !commands
 
             Context.Server.CommandHandlers.AddCommandHandler(gamemasterCommandHandler);
 
@@ -67,14 +66,32 @@ namespace OpenTibia.Game.Scripts
 
             Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new UptimeHandler() ); // !uptime
 
-            Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new BuyHouseHandler() ); // !buyhouse
-
-            Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new LeaveHouseHandler() ); // !leavehouse
+            Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new CommandsHandler() ); // !commands
 
             if (Context.Server.Config.Rules != null)
             {
                 Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new RulesHandler() ); // !rules
             }
+
+            //TODO: Convert to scripts
+
+                Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new BuyHouseHandler() ); // !buyhouse
+
+                Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new LeaveHouseHandler() ); // !leavehouse
+
+                Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new CreateGuildHandler() ); // !createguild
+
+                Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new InviteGuildHandler() ); // !inviteguild
+
+                Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new ExcludeGuildHandler() ); // !excludeguild
+
+                Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new ChangeGuildRankHandler() ); // !changeguildrank
+
+                Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new PassLeadershipGuildHandler() ); // !passleadershipguild
+
+                Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new JoinGuildHandler() ); // !joinguild
+
+                Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new LeaveGuildHandler() ); // !leaveguild
 
             Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new SpellsHandler() );
 

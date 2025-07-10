@@ -5,9 +5,18 @@ namespace OpenTibia.Game.Common.ServerObjects
 {
     public class Guild
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
-        private HashSet<Player> members = new HashSet<Player>();
+        public int /* databasePlayerId */ Leader { get; set; }
+
+        public bool IsLeader(Player player)
+        {
+            return Leader == player.DatabasePlayerId;
+        }
+
+        private Dictionary<int /* databasePlayerId */, string> members = new Dictionary<int, string>();
 
         public int CountMembers
         {
@@ -17,38 +26,64 @@ namespace OpenTibia.Game.Common.ServerObjects
             }
         }
 
-        public void AddMember(Player player)
+        public void AddMember(int databasePlayerId, string rankName)
         {
-            members.Add(player);
+            members.Add(databasePlayerId, rankName);
+        }
+
+        public void AddMember(Player player, string rankName)
+        {
+            AddMember(player.DatabasePlayerId, rankName);
         }
 
         public void RemoveMember(Player player)
         {
-            members.Remove(player);
+            members.Remove(player.DatabasePlayerId);
         }
 
-        public bool ContainsMember(Player player)
+        public bool ContainsMember(Player player, out string rankName)
         {
-            return members.Contains(player);
+            return members.TryGetValue(player.DatabasePlayerId, out rankName);
         }
 
-        public IEnumerable<Player> GetMembers()
+        public IEnumerable<KeyValuePair<int /* databasePlayerId */, string> > GetMembers()
         {
             return members;
         }
 
-        public string Leader { get; set; }
+        private Dictionary<int /* databasePlayerId */, string> invitations = new Dictionary<int, string>();
 
-        public bool IsLeader(string playerName)
+        public int CountInvitations
         {
-            return Leader == playerName;
+            get
+            {
+                return invitations.Count;
+            }
         }
 
-        public HashSet<string> ViceLeaders { get; set; }
-
-        public bool IsViceLeader(string playerName)
+        public void AddInvitation(int databasePlayerId, string rankName)
         {
-            return ViceLeaders.Contains(playerName);
+            invitations.Add(databasePlayerId, rankName);
+        }
+
+        public void AddInvitation(Player player, string rankName)
+        {
+            AddInvitation(player.DatabasePlayerId, rankName);
+        }
+
+        public void RemoveInvitation(Player player)
+        {
+            invitations.Remove(player.DatabasePlayerId);
+        }
+
+        public bool ContainsInvitation(Player player, out string rankName)
+        {
+            return invitations.TryGetValue(player.DatabasePlayerId, out rankName);
+        }
+
+        public IEnumerable<KeyValuePair<int /* databasePlayerId */, string> > GetInvitations()
+        {
+            return invitations;
         }
     }
 }

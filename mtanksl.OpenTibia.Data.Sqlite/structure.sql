@@ -610,3 +610,40 @@ ALTER TABLE "PlayerVips" ADD "IconId" INTEGER NOT NULL DEFAULT 10;
 ALTER TABLE "PlayerVips" ADD "NotifyLogin" INTEGER NOT NULL DEFAULT 0;
 
 COMMIT;
+
+--
+
+BEGIN TRANSACTION;
+
+CREATE TABLE "Guilds" (
+    "Id" INTEGER NOT NULL CONSTRAINT "PK_Guilds" PRIMARY KEY AUTOINCREMENT,
+    "Name" TEXT NOT NULL,
+    "LeaderId" INTEGER NOT NULL,
+    CONSTRAINT "FK_Guilds_Players_LeaderId" FOREIGN KEY ("LeaderId") REFERENCES "Players" ("Id") ON DELETE CASCADE
+);
+
+CREATE TABLE "GuildInvitations" (
+    "GuildId" INTEGER NOT NULL,
+    "PlayerId" INTEGER NOT NULL,
+    "RankName" TEXT NULL,
+    CONSTRAINT "PK_GuildInvitations" PRIMARY KEY ("GuildId", "PlayerId"),
+    CONSTRAINT "FK_GuildInvitations_Guilds_GuildId" FOREIGN KEY ("GuildId") REFERENCES "Guilds" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_GuildInvitations_Players_PlayerId" FOREIGN KEY ("PlayerId") REFERENCES "Players" ("Id") ON DELETE CASCADE
+);
+
+CREATE TABLE "GuildMembers" (
+    "GuildId" INTEGER NOT NULL,
+    "PlayerId" INTEGER NOT NULL,
+    "RankName" TEXT NULL,
+    CONSTRAINT "PK_GuildMembers" PRIMARY KEY ("GuildId", "PlayerId"),
+    CONSTRAINT "FK_GuildMembers_Guilds_GuildId" FOREIGN KEY ("GuildId") REFERENCES "Guilds" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_GuildMembers_Players_PlayerId" FOREIGN KEY ("PlayerId") REFERENCES "Players" ("Id") ON DELETE CASCADE
+);
+
+CREATE INDEX "IX_GuildInvitations_PlayerId" ON "GuildInvitations" ("PlayerId");
+
+CREATE INDEX "IX_GuildMembers_PlayerId" ON "GuildMembers" ("PlayerId");
+
+CREATE INDEX "IX_Guilds_LeaderId" ON "Guilds" ("LeaderId");
+
+COMMIT;

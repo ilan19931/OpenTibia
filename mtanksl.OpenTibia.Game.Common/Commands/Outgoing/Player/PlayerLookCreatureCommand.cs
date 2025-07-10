@@ -1,6 +1,7 @@
 ﻿using OpenTibia.Common.Objects;
 using OpenTibia.Common.Structures;
 using OpenTibia.Game.Common;
+using OpenTibia.Game.Common.ServerObjects;
 using OpenTibia.Game.Components;
 using OpenTibia.Network.Packets.Outgoing;
 using System;
@@ -150,6 +151,101 @@ namespace OpenTibia.Game.Commands
                             default:
 
                                 throw new NotImplementedException();
+                        }
+                    }
+
+                    Party party = Context.Server.Parties.GetPartyThatContainsMember(player);
+
+                    if (party != null)
+                    {
+                        if (player == Player)
+                        {
+                            builder.Append(" Your party has ");
+                        }
+                        else
+                        {
+                            switch (player.Gender)
+                            {
+                                case Gender.Male:
+
+                                    builder.Append(" He is in a party with ");
+
+                                    break;
+
+                                case Gender.Female:
+
+                                    builder.Append(" She is in a party with ");
+
+                                    break;
+
+                                default:
+
+                                    throw new NotImplementedException();
+                            }
+                        }
+
+                        if (party.CountMembers == 1)
+                        {
+                            builder.Append("1 member and ");
+                        }
+                        else
+                        {
+                            builder.Append(party.CountMembers + " members and ");
+                        }
+
+                        if (party.CountInvitations == 1)
+                        {
+                            builder.Append("1 pending invitation.");
+                        }
+                        else
+                        {
+                            builder.Append(party.CountInvitations + " pending invitations.");
+                        }
+                    }
+
+                    Guild guild = Context.Server.Guilds.GetGuildThatContainsMember(player);
+
+                    if (guild != null)
+                    {
+                        if (player == Player)
+                        {
+                            builder.Append(" You are ");
+                        }
+                        else
+                        {
+                            switch (player.Gender)
+                            {
+                                case Gender.Male:
+
+                                    builder.Append(" He is ");
+
+                                    break;
+
+                                case Gender.Female:
+
+                                    builder.Append(" She is ");
+
+                                    break;
+
+                                default:
+
+                                    throw new NotImplementedException();
+                            }
+                        }
+
+                        string rankName;
+
+                        guild.ContainsMember(player, out rankName);
+
+                        builder.Append(rankName + " of the " + guild.Name);
+
+                        if (guild.CountMembers == 1)
+                        {
+                            builder.Append(", which has 1 member.");
+                        }
+                        else
+                        {
+                            builder.Append(", which has " + guild.CountMembers + " members.");
                         }
                     }
 

@@ -43,9 +43,14 @@ namespace OpenTibia.Game.Commands
                             {
                                 ShowTextOutgoingPacket showTextOutgoingPacket = new ShowTextOutgoingPacket(Context.Server.Channels.GenerateStatementId(Player.DatabasePlayerId, Message), Player.Name, Player.Level, MessageMode.GamemasterChannel, channel.Id, Message);
 
-                                foreach (var observer in guild.GetMembers() )
+                                foreach (var item in guild.GetMembers() )
                                 {
-                                    Context.AddPacket(observer, showTextOutgoingPacket);
+                                    Player observer = Context.Server.GameObjects.GetPlayerByDatabasePlayerId(item.Key);
+
+                                    if (observer != null)
+                                    {
+                                        Context.AddPacket(observer, showTextOutgoingPacket);
+                                    }
                                 }
                             }
                         }

@@ -480,6 +480,33 @@ namespace OpenTibia.Game.Common
                         Statistics.PlayersPeek = uint.Parse(playersPeek.Value);
                     }
 
+                    using (Logger.Measure("Loading guilds") )
+                    { 
+                        foreach (var dbGuild in await database.GuildRepository.GetGuilds() )
+                        {
+                            Guild guild = new Guild()
+                            {
+                                Id = dbGuild.Id,
+
+                                Name = dbGuild.Name,
+
+                                Leader = dbGuild.LeaderId
+                            };
+
+                            foreach (var dbGuildMember in dbGuild.Members)
+                            {
+                                guild.AddMember(dbGuildMember.PlayerId, dbGuildMember.RankName);
+                            }
+
+                            foreach (var dbGuildInvitation in dbGuild.Invitations)
+                            {
+                                guild.AddInvitation(dbGuildInvitation.PlayerId, dbGuildInvitation.RankName);
+                            }
+
+                            Guilds.AddGuild(guild);
+                        }
+                    }
+
                     using (Logger.Measure("Loading houses") )
                     {
                         foreach (var dbHouse in await database.HouseRepository.GetHouses() )
@@ -838,6 +865,8 @@ namespace OpenTibia.Game.Common
                     {
                         Logger.WriteLine("Saving players skipped, because file config.lua parameter server.game.gameplay.allowclones is true.", LogLevel.Warning);
 
+                        Logger.WriteLine("Saving guilds skipped, because file config.lua parameter server.game.gameplay.allowclones is true.", LogLevel.Warning);
+
                         Logger.WriteLine("Saving houses skipped, because file config.lua parameter server.game.gameplay.allowclones is true.", LogLevel.Warning);
                     }
                     else
@@ -866,6 +895,83 @@ namespace OpenTibia.Game.Common
                                         PlayerFactory.Save(dbPlayer, player);
                                     }
                                 }                   
+                            }
+                        }
+
+                        using (Logger.Measure("Saving guilds") )
+                        {
+                            Guild[] guilds = Guilds.GetGuilds().ToArray();
+
+                            DbGuild[] dbGuilds = await database.GuildRepository.GetGuilds();
+
+                            foreach (var id in guilds.Select(g => g.Id).Except(dbGuilds.Select(g => g.Id) ) )
+                            {
+                                Guild guild = guilds.Where(g => g.Id == id).First();
+
+                                database.GuildRepository.AddGuild(new DbGuild()
+                                {
+                                    Name = guild.Name,
+
+                                    LeaderId = guild.Leader,
+
+                                    Members = guild.GetMembers().Select(m => new DbGuildMember()
+                                    {
+                                        PlayerId = m.Key,
+
+                                        RankName = m.Value
+
+                                    } ).ToArray(),
+
+                                    Invitations = guild.GetInvitations().Select(m => new DbGuildInvitation()
+                                    {
+                                        PlayerId = m.Key,
+
+                                        RankName = m.Value
+
+                                    } ).ToArray()
+                                } );
+                            }
+
+                            foreach (var id in guilds.Select(g => g.Id).Intersect(dbGuilds.Select(g => g.Id) ) )
+                            {
+                                Guild guild = guilds.Where(g => g.Id == id).First();
+
+                                DbGuild dbGuild = dbGuilds.Where(g => g.Id == id).First();
+
+                                dbGuild.Name = guild.Name;
+
+                                dbGuild.LeaderId = guild.Leader;
+
+                                dbGuild.Members.Clear();
+
+                                foreach (var item in guild.GetMembers() )
+                                {
+                                    dbGuild.Members.Add(new DbGuildMember()
+                                    {
+                                        PlayerId = item.Key,
+
+                                        RankName = item.Value
+                                    } );
+                                }
+
+                                dbGuild.Invitations.Clear();
+
+                                foreach (var item in guild.GetInvitations() )
+                                {
+                                    dbGuild.Invitations.Add(new DbGuildInvitation()
+                                    {
+                                        PlayerId = item.Key,
+
+                                        RankName = item.Value
+                                    } );
+                                }
+                            }
+
+                            foreach (var id in dbGuilds.Select(g => g.Id).Except(guilds.Select(g => g.Id) ) )
+                            {
+                                DbGuild dbGuild = dbGuilds.Where(g => g.Id == id).First();
+
+                                database.GuildRepository.RemoveGuild(dbGuild);
                             }
                         }
 

@@ -17,6 +17,12 @@ namespace OpenTibia.Data.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<DbGuildMember>()
+                .HasKey(m => new { m.GuildId, m.PlayerId } );
+
+            modelBuilder.Entity<DbGuildInvitation>()
+                .HasKey(m => new { m.GuildId, m.PlayerId } );
+
             modelBuilder.Entity<DbHouseAccessList>()
                 .HasKey(m => new { m.HouseId, m.ListId } );
 
@@ -229,6 +235,12 @@ namespace OpenTibia.Data.Contexts
         public DbSet<DbBugReport> BugReports { get; set; }
 
         public DbSet<DbDebugAssert> DebugAsserts { get; set; }
+
+        public DbSet<DbGuild> Guilds { get; set; }
+
+        public DbSet<DbGuildMember> GuildMembers { get; set; }
+
+        public DbSet<DbGuildInvitation> GuildInvitations { get; set; }
 
         public DbSet<DbHouse> Houses { get; set; }
 
