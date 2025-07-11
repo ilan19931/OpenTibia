@@ -11,17 +11,30 @@ registertalkactionsplayersay("/cp", function(player, message)
 	return false
 end)
 
--- /gc - Return to a checkpoint
+-- /gc [player_name] - Return to a checkpoint
 
 registertalkactionsplayersay("/gc", function(player, message)
 	if cast("System.Int64", player.Rank) == rank.gamemaster then
 		if checkpointposition then
-			local tile = command.mapgettile(checkpointposition)
-			command.showmagiceffect(player, magiceffecttype.puff)
-			command.creaturemove(player, tile)
-			command.showmagiceffect(player, magiceffecttype.teleport)
+			local space = string.find(message, " ")
+			if space then
+				local observer = command.gameobjectsgetplayerbyname(string.sub(message, space + 1))			
+				if observer then
+					local tile = command.mapgettile(checkpointposition)
+					command.showmagiceffect(observer, magiceffecttype.puff)
+					command.creaturemove(observer, tile)
+					command.showmagiceffect(observer, magiceffecttype.teleport)
+				else
+					command.showmagiceffect(player, magiceffecttype.puff)
+				end
+			else
+				local tile = command.mapgettile(checkpointposition)
+				command.showmagiceffect(player, magiceffecttype.puff)
+				command.creaturemove(player, tile)
+				command.showmagiceffect(player, magiceffecttype.teleport)
+			end
 		else
-			command.showwindowtext(player, messagemode.failure, "Use '/cp' to set a checkpoint, then '/gc' to return to a checkpoint.")
+			command.showwindowtext(player, messagemode.failure, "Use '/cp' to set a checkpoint, then '/gc [player_name]' to return to a checkpoint.")
 			command.showmagiceffect(player, magiceffecttype.puff)
 		end
 		return true -- handled, stop process

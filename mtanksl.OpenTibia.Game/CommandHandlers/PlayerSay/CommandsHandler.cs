@@ -51,7 +51,7 @@ namespace OpenTibia.Game.CommandHandlers
                         "@<player_name>@<message> - Send message to player",
 
                         "/cp - Set a checkpoint",
-                        "/gc - Return to a checkpoint",
+                        "/gc [player_name] - Return to a checkpoint",
                         "/tp [seconds] - Create a teleport that will disappear after n seconds",
 
                         "/poll <question> - Start the poll with a yes-no question",
