@@ -4,6 +4,9 @@ using OpenTibia.Game.Common;
 using OpenTibia.Game.Components;
 using OpenTibia.Game.Events;
 using OpenTibia.Network.Packets.Outgoing;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace OpenTibia.Game.Commands
 {
@@ -19,6 +22,48 @@ namespace OpenTibia.Game.Commands
         public Player Player { get; set; }
 
         public string Message { get; set; }
+
+        private List<string> parameters;
+
+        public List<string> Parameters(int skip)
+        {
+            if (parameters == null)
+            {
+                parameters = new List<string>();
+
+                StringBuilder token = new StringBuilder();
+
+                bool quoted = false;
+
+                foreach (var character in Message.Skip(skip) )
+                {
+                    if (character == '\"')
+                    {
+                        quoted = !quoted;
+                    }
+                    else if (character == ' ' && !quoted)
+                    {
+                        if (token.Length > 0)
+                        {
+                            parameters.Add(token.ToString() );
+
+                            token.Clear();
+                        }
+                    }
+                    else
+                    {
+                        token.Append(character);
+                    }
+                }
+
+                if (token.Length > 0)
+                {
+                    parameters.Add(token.ToString() );
+                }
+            }
+
+            return parameters;
+        }
 
         public override Promise Execute()
         {

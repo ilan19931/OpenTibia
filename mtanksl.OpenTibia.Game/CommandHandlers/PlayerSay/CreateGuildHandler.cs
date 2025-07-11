@@ -4,6 +4,8 @@ using OpenTibia.Game.Common;
 using OpenTibia.Game.Common.ServerObjects;
 using OpenTibia.Network.Packets.Outgoing;
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace OpenTibia.Game.CommandHandlers
 {
@@ -12,31 +14,39 @@ namespace OpenTibia.Game.CommandHandlers
         public override Promise Handle(Func<Promise> next, PlayerSayCommand command)
         {
             if (command.Message.StartsWith("!createguild ") )
-            {                
-                string guildName = command.Message.Substring(13);
+            {
+                List<string> parameters = command.Parameters(13);
 
-                Guild guild = Context.Server.Guilds.GetGuildByName(guildName);
-
-                if (guild == null)
+                if (parameters.Count == 1)
                 {
-                    guild = Context.Server.Guilds.GetGuildThatContainsMember(command.Player);
+                    string guildName = parameters[0];
 
-                    if (guild == null)
+                    if (guildName.Length >= 3 && guildName.Length <= 29 && Regex.IsMatch(guildName, "^[a-zA-Z]+(?:[ '][a-zA-Z]+)*$") )
                     {
-                        guild = new Guild()
+                        Guild guild = Context.Server.Guilds.GetGuildByName(guildName);
+
+                        if (guild == null)
                         {
-                            Name = guildName,
+                            guild = Context.Server.Guilds.GetGuildThatContainsMember(command.Player);
 
-                            Leader = command.Player.DatabasePlayerId
-                        };
+                            if (guild == null)
+                            {
+                                guild = new Guild()
+                                {
+                                    Name = guildName,
 
-                        guild.AddMember(command.Player, "Leader");
+                                    Leader = command.Player.DatabasePlayerId
+                                };
 
-                        Context.Server.Guilds.AddGuild(guild);
+                                guild.AddMember(command.Player, "Leader");
 
-                        Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "Guild " + guild.Name + " has been created. Invite players with !inviteguild <player_name> <rank_name> command. Disband with !leaveguild command.") );
+                                Context.Server.Guilds.AddGuild(guild);
 
-                        return Promise.Completed;
+                                Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "Guild " + guild.Name + " has been created. Invite players with !inviteguild <player_name> <rank_name> command. Disband with !leaveguild command.") );
+
+                                return Promise.Completed;
+                            }
+                        }
                     }
                 }
 

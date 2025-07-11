@@ -55,7 +55,6 @@ namespace OpenTibia.Game.Scripts
 
                 gamemasterCommandHandler.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new TeleportToWaypointHandler() ); // /w           (alani)
 
-
             Context.Server.CommandHandlers.AddCommandHandler(gamemasterCommandHandler);
 
             Context.Server.CommandHandlers.AddCommandHandler<PlayerSayCommand>(new HelpHandler() ); // !help

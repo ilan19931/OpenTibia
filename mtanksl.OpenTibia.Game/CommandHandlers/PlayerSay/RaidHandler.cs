@@ -3,6 +3,7 @@ using OpenTibia.Game.Commands;
 using OpenTibia.Game.Common;
 using OpenTibia.Network.Packets.Outgoing;
 using System;
+using System.Collections.Generic;
 
 namespace OpenTibia.Game.CommandHandlers
 {
@@ -12,11 +13,16 @@ namespace OpenTibia.Game.CommandHandlers
         {
             if (command.Message.StartsWith("/raid ") )
             {
-                string name = command.Message.Substring(6);
+                List<string> parameters = command.Parameters(6);
 
-                if (Context.Server.Raids.Start(name) )
+                if (parameters.Count == 1)
                 {
-                    Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "Raid " + name + " has been started.") );
+                    string name = parameters[0];
+
+                    if (Context.Server.Raids.Start(name) )
+                    {
+                        Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "Raid " + name + " has been started.") );
+                    }
                 }
 
                 return Context.AddCommand(new ShowMagicEffectCommand(command.Player, MagicEffectType.Puff) );

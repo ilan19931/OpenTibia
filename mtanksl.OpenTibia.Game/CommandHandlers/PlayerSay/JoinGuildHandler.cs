@@ -4,6 +4,7 @@ using OpenTibia.Game.Common;
 using OpenTibia.Game.Common.ServerObjects;
 using OpenTibia.Network.Packets.Outgoing;
 using System;
+using System.Collections.Generic;
 
 namespace OpenTibia.Game.CommandHandlers
 {
@@ -13,32 +14,37 @@ namespace OpenTibia.Game.CommandHandlers
         {
             if (command.Message.StartsWith("!joinguild ") )
             {
-                string guildName = command.Message.Substring(11);
+                List<string> parameters = command.Parameters(11);
 
-                Guild guild = Context.Server.Guilds.GetGuildByName(guildName);
-
-                if (guild != null)
+                if (parameters.Count == 1)
                 {
-                    Guild guild2 = Context.Server.Guilds.GetGuildThatContainsMember(command.Player);
+                    string guildName = parameters[0];
 
-                    if (guild2 == null)
+                    Guild guild = Context.Server.Guilds.GetGuildByName(guildName);
+
+                    if (guild != null)
                     {
-                        string rankName;
+                        Guild guild2 = Context.Server.Guilds.GetGuildThatContainsMember(command.Player);
 
-                        if (guild.ContainsInvitation(command.Player, out rankName) )
+                        if (guild2 == null)
                         {
-                            guild.RemoveInvitation(command.Player);
+                            string rankName;
 
-                            guild.AddMember(command.Player, rankName);
+                            if (guild.ContainsInvitation(command.Player, out rankName) )
+                            {
+                                guild.RemoveInvitation(command.Player);
 
-                            Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "You have joined " + guild.Name + " guild. Leave with !leaveguild command.") );
+                                guild.AddMember(command.Player, rankName);
 
-                            return Promise.Completed;
+                                Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "You have joined " + guild.Name + " guild. Leave with !leaveguild command.") );
+
+                                return Promise.Completed;
+                            }
                         }
                     }
-                }
 
-                return Context.AddCommand(new ShowMagicEffectCommand(command.Player, MagicEffectType.Puff) );
+                    return Context.AddCommand(new ShowMagicEffectCommand(command.Player, MagicEffectType.Puff) );
+                }
             }
 
             return next();

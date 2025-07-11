@@ -4,6 +4,7 @@ using OpenTibia.Game.Commands;
 using OpenTibia.Game.Common;
 using OpenTibia.Network.Packets.Outgoing;
 using System;
+using System.Collections.Generic;
 using System.Net;
 
 namespace OpenTibia.Game.CommandHandlers
@@ -14,34 +15,19 @@ namespace OpenTibia.Game.CommandHandlers
         {
             if (command.Message.StartsWith("/unban ") )
             {
-                string parameter = command.Message.Substring(7);
+                List<string> parameters = command.Parameters(7);
 
-                using (var database = Context.Server.DatabaseFactory.Create() )
+                if (parameters.Count == 1)
                 {
-                    IPAddress ipAddress;
+                    string parameter = parameters[0];
 
-                    if (IPAddress.TryParse(parameter, out ipAddress) )
+                    using (var database = Context.Server.DatabaseFactory.Create() )
                     {
-                        DbBan dbBan = await database.BanRepository.GetBanByIpAddress(ipAddress.ToString() );
+                        IPAddress ipAddress;
 
-                        if (dbBan != null)
+                        if (IPAddress.TryParse(parameter, out ipAddress) )
                         {
-                            database.BanRepository.RemoveBan(dbBan);
-
-                            await database.Commit();
-                        }
-
-                        Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "IP Address " + parameter + " has been unbanned.") );
-
-                        return;
-                    }
-                    else
-                    {
-                        DbPlayer dbPlayer = await database.PlayerRepository.GetPlayerByName(parameter);
-
-                        if (dbPlayer != null)
-                        {
-                            DbBan dbBan = await database.BanRepository.GetBanByPlayerId(dbPlayer.Id);
+                            DbBan dbBan = await database.BanRepository.GetBanByIpAddress(ipAddress.ToString() );
 
                             if (dbBan != null)
                             {
@@ -50,17 +36,17 @@ namespace OpenTibia.Game.CommandHandlers
                                 await database.Commit();
                             }
 
-                            Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "Player " + parameter + " has been unbanned.") );
+                            Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "IP Address " + parameter + " has been unbanned.") );
 
                             return;
                         }
                         else
                         {
-                            DbAccount dbAccount = await database.AccountRepository.GetAccountByName(parameter);
+                            DbPlayer dbPlayer = await database.PlayerRepository.GetPlayerByName(parameter);
 
-                            if (dbAccount != null)
+                            if (dbPlayer != null)
                             {
-                                DbBan dbBan = await database.BanRepository.GetBanByAccountId(dbAccount.Id);
+                                DbBan dbBan = await database.BanRepository.GetBanByPlayerId(dbPlayer.Id);
 
                                 if (dbBan != null)
                                 {
@@ -69,14 +55,34 @@ namespace OpenTibia.Game.CommandHandlers
                                     await database.Commit();
                                 }
 
-                                Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "Account " + parameter + " has been unbanned.") );
+                                Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "Player " + parameter + " has been unbanned.") );
 
                                 return;
+                            }
+                            else
+                            {
+                                DbAccount dbAccount = await database.AccountRepository.GetAccountByName(parameter);
+
+                                if (dbAccount != null)
+                                {
+                                    DbBan dbBan = await database.BanRepository.GetBanByAccountId(dbAccount.Id);
+
+                                    if (dbBan != null)
+                                    {
+                                        database.BanRepository.RemoveBan(dbBan);
+
+                                        await database.Commit();
+                                    }
+
+                                    Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "Account " + parameter + " has been unbanned.") );
+
+                                    return;
+                                }
                             }
                         }
                     }
                 }
-
+                 
                 await Context.AddCommand(new ShowMagicEffectCommand(command.Player, MagicEffectType.Puff) ); return;
             }
 

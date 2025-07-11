@@ -3,6 +3,7 @@ using OpenTibia.Common.Structures;
 using OpenTibia.Game.Commands;
 using OpenTibia.Game.Common;
 using System;
+using System.Collections.Generic;
 
 namespace OpenTibia.Game.CommandHandlers
 {
@@ -12,13 +13,13 @@ namespace OpenTibia.Game.CommandHandlers
         {
             if (command.Message.StartsWith("/i ") )
             {
-                string[] split = command.Message.Split(" ");
+                List<string> parameters = command.Parameters(3);
 
-                if (split.Length == 2)
+                if (parameters.Count == 1)
                 {
                     ushort toOpenTibiaId;
 
-                    if (ushort.TryParse(split[1], out toOpenTibiaId) )
+                    if (ushort.TryParse(parameters[0], out toOpenTibiaId) )
                     {
                         Tile toTile = Context.Server.Map.GetTile(command.Player.Tile.Position.Offset(command.Player.Direction) );
 
@@ -29,17 +30,15 @@ namespace OpenTibia.Game.CommandHandlers
                                 return Context.AddCommand(new ShowMagicEffectCommand(toTile.Position, MagicEffectType.BlueShimmer) );
                             } );
                         }
-
-                        return Context.AddCommand(new ShowMagicEffectCommand(command.Player, MagicEffectType.Puff) );
                     }
                 }
-                else 
+                else if (parameters.Count == 2)
                 {
                     ushort toOpenTibiaId;
 
                     byte count;
 
-                    if (ushort.TryParse(split[1], out toOpenTibiaId) && byte.TryParse(split[2], out count) && count >= 1 && count <= 100)
+                    if (ushort.TryParse(parameters[0], out toOpenTibiaId) && byte.TryParse(parameters[1], out count) && count >= 1 && count <= 100)
                     {
                         Tile toTile = Context.Server.Map.GetTile(command.Player.Tile.Position.Offset(command.Player.Direction) );
 
@@ -50,10 +49,10 @@ namespace OpenTibia.Game.CommandHandlers
                                 return Context.AddCommand(new ShowMagicEffectCommand(toTile.Position, MagicEffectType.BlueShimmer) );
                             } );
                         }
-
-                        return Context.AddCommand(new ShowMagicEffectCommand(command.Player, MagicEffectType.Puff) );
                     }
                 }
+
+                return Context.AddCommand(new ShowMagicEffectCommand(command.Player, MagicEffectType.Puff) );
             }
 
             return next();

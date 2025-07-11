@@ -3,6 +3,7 @@ using OpenTibia.Common.Structures;
 using OpenTibia.Game.Commands;
 using OpenTibia.Game.Common;
 using System;
+using System.Collections.Generic;
 
 namespace OpenTibia.Game.CommandHandlers
 {
@@ -12,26 +13,31 @@ namespace OpenTibia.Game.CommandHandlers
         {
             if (command.Message.StartsWith("/town ") )
             {
-                string name = command.Message.Substring(6);
+                List<string> parameters = command.Parameters(6);
 
-                Town town = Context.Server.Map.GetTown(name);
-
-                if (town != null)
+                if (parameters.Count == 1)
                 {
-                    Tile toTile = Context.Server.Map.GetTile(town.Position);
+                    string name = parameters[0];
 
-                    if (toTile != null)
+                    Town town = Context.Server.Map.GetTown(name);
+
+                    if (town != null)
                     {
-                        Tile fromTile = command.Player.Tile;
+                        Tile toTile = Context.Server.Map.GetTile(town.Position);
 
-                        return Context.AddCommand(new CreatureMoveCommand(command.Player, toTile) ).Then( () =>
+                        if (toTile != null)
                         {
-                            return Context.AddCommand(new ShowMagicEffectCommand(fromTile.Position, MagicEffectType.Puff) );
+                            Tile fromTile = command.Player.Tile;
 
-                        } ).Then( () =>
-                        {
-                            return Context.AddCommand(new ShowMagicEffectCommand(toTile.Position, MagicEffectType.Teleport) );
-                        } );
+                            return Context.AddCommand(new CreatureMoveCommand(command.Player, toTile) ).Then( () =>
+                            {
+                                return Context.AddCommand(new ShowMagicEffectCommand(fromTile.Position, MagicEffectType.Puff) );
+
+                            } ).Then( () =>
+                            {
+                                return Context.AddCommand(new ShowMagicEffectCommand(toTile.Position, MagicEffectType.Teleport) );
+                            } );
+                        }
                     }
                 }
 

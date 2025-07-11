@@ -4,6 +4,7 @@ using OpenTibia.Game.Common;
 using OpenTibia.Game.Common.ServerObjects;
 using OpenTibia.Network.Packets.Outgoing;
 using System;
+using System.Collections.Generic;
 
 namespace OpenTibia.Game.CommandHandlers
 {
@@ -13,22 +14,27 @@ namespace OpenTibia.Game.CommandHandlers
         {
             if (command.Message.StartsWith("!setmotdguild ") )
             {
-                string message = command.Message.Substring(14);
+                List<string> parameters = command.Parameters(14);
 
-                if ( !string.IsNullOrEmpty(message) && message.Length < 255)
+                if (parameters.Count == 1)
                 {
-                    Guild guild = Context.Server.Guilds.GetGuildByLeader(command.Player);
+                    string messageOfTheDay = parameters[0];
 
-                    if (guild != null)
+                    if ( !string.IsNullOrEmpty(messageOfTheDay) && messageOfTheDay.Length < 255)
                     {
-                        guild.MessageOfTheDay = message;
+                        Guild guild = Context.Server.Guilds.GetGuildByLeader(command.Player);
 
-                        Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "Message of the day has been set.") );
+                        if (guild != null)
+                        {
+                            guild.MessageOfTheDay = messageOfTheDay;
 
-                        return Promise.Completed;
+                            Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, "Message of the day has been set.") );
+
+                            return Promise.Completed;
+                        }
+
+                        return Context.AddCommand(new ShowMagicEffectCommand(command.Player, MagicEffectType.Puff) );
                     }
-
-                    return Context.AddCommand(new ShowMagicEffectCommand(command.Player, MagicEffectType.Puff) );
                 }
             }
 

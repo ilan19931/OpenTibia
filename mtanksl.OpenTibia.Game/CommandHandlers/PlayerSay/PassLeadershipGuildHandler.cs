@@ -5,6 +5,7 @@ using OpenTibia.Game.Common;
 using OpenTibia.Game.Common.ServerObjects;
 using OpenTibia.Network.Packets.Outgoing;
 using System;
+using System.Collections.Generic;
 
 namespace OpenTibia.Game.CommandHandlers
 {
@@ -14,31 +15,36 @@ namespace OpenTibia.Game.CommandHandlers
         {
             if (command.Message.StartsWith("!passleadershipguild ") )
             {
-                string playerName = command.Message.Substring(21);
+                List<string> parameters = command.Parameters(21);
 
-                Player observer = Context.Server.GameObjects.GetPlayerByName(playerName);
-
-                if (observer != null && observer != command.Player)
+                if (parameters.Count == 1)
                 {
-                    Guild guild = Context.Server.Guilds.GetGuildByLeader(command.Player);
+                    string playerName = parameters[0];
 
-                    if (guild != null)
+                    Player observer = Context.Server.GameObjects.GetPlayerByName(playerName);
+
+                    if (observer != null && observer != command.Player)
                     {
-                        if (guild.ContainsMember(observer, out _) )
+                        Guild guild = Context.Server.Guilds.GetGuildByLeader(command.Player);
+
+                        if (guild != null)
                         {
-                            guild.Leader = observer.DatabasePlayerId;
+                            if (guild.ContainsMember(observer, out _) )
+                            {
+                                guild.Leader = observer.DatabasePlayerId;
 
-                            guild.RemoveMember(command.Player);
-                            guild.AddMember(command.Player, "Vice-Leader");
+                                guild.RemoveMember(command.Player);
+                                guild.AddMember(command.Player, "Vice-Leader");
 
-                            guild.RemoveMember(observer);
-                            guild.AddMember(observer, "Leader");
+                                guild.RemoveMember(observer);
+                                guild.AddMember(observer, "Leader");
 
-                            Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, observer.Name + " is now the leader of te guild.") );
+                                Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, observer.Name + " is now the leader of te guild.") );
 
-                            Context.AddPacket(observer, new ShowWindowTextOutgoingPacket(MessageMode.Look, "You are now the leader of the guild.") );
+                                Context.AddPacket(observer, new ShowWindowTextOutgoingPacket(MessageMode.Look, "You are now the leader of the guild.") );
 
-                            return Promise.Completed;
+                                return Promise.Completed;
+                            }
                         }
                     }
                 }

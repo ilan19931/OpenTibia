@@ -941,7 +941,7 @@ namespace OpenTibia.Game.CommandHandlers
 
         private static bool IsValidPlayerName(string playerName)
         {
-            if (string.IsNullOrEmpty(playerName) || playerName.Length < 3 || playerName.Length > 29 || !IsValidISO88591(playerName) || !Regex.IsMatch(playerName, "^[a-zA-Z]+(?:[ '][a-zA-Z]+)*$") || playerName.StartsWith("god ", StringComparison.OrdinalIgnoreCase) || playerName.StartsWith("cm ", StringComparison.OrdinalIgnoreCase) || playerName.StartsWith("gm ", StringComparison.OrdinalIgnoreCase) )
+            if (string.IsNullOrEmpty(playerName) || playerName.Length < 3 || playerName.Length > 29 || !IsValidISO88591(playerName) || playerName.StartsWith("god ", StringComparison.OrdinalIgnoreCase) || playerName.StartsWith("cm ", StringComparison.OrdinalIgnoreCase) || playerName.StartsWith("gm ", StringComparison.OrdinalIgnoreCase) || !Regex.IsMatch(playerName, "^[a-zA-Z]+(?:[ '][a-zA-Z]+)*$") )
             {
                 return false;
             }
