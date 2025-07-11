@@ -12,7 +12,7 @@ namespace OpenTibia.Game.Common.Extensions
             {
                 if (t.IsCanceled)
                 {
-                    promise.TrySetException(new PromiseCanceledException() );
+                    promise.TrySetException(PromiseCanceledException.Instance);
                 }
                 else if (t.IsFaulted)
                 {
@@ -35,7 +35,7 @@ namespace OpenTibia.Game.Common.Extensions
             {
                 if (t.IsCanceled)
                 {
-                    promise.TrySetException(new PromiseCanceledException() );
+                    promise.TrySetException(PromiseCanceledException.Instance);
                 }
                 else if (t.IsFaulted)
                 {

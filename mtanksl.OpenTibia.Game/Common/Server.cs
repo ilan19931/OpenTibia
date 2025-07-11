@@ -774,7 +774,7 @@ namespace OpenTibia.Game.Common
 
                 schedulerEvent.Canceled += (sender, e) =>
                 {
-                    Exception ex = new PromiseCanceledException();
+                    Exception ex = PromiseCanceledException.Instance;
 
                     reject(ex);
                 };

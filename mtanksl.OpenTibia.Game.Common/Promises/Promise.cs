@@ -26,7 +26,7 @@ namespace OpenTibia.Game.Common
 
         private static Promise broken = Promise.Run( (resolve, reject) =>
         {
-            Exception ex = new PromiseCanceledException();
+            Exception ex = PromiseCanceledException.Instance;
 
             reject(ex);
         } );
