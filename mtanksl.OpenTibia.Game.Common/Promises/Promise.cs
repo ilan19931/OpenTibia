@@ -729,7 +729,18 @@ namespace OpenTibia.Game.Common
 
         public void SetResult()
         {
-            Task.TrySetResult();
+            if (promise == null)
+            {
+                // Sync
+
+                promise = Promise.Completed;
+            }
+            else
+            {
+                // Async
+
+                promise.TrySetResult();
+            }
         }
 
         public void SetException(Exception ex)
