@@ -19,9 +19,9 @@ namespace OpenTibia.Game.Common
 
         private Exception exception;
 
-        private List<Action<TResult>> continueWithFulfilled;
+        private LinkedList<Action<TResult>> continueWithFulfilled;
 
-        private List<Action<Exception>> continueWithRejected;
+        private LinkedList<Action<Exception>> continueWithRejected;
 
         public PromiseResult()
         {
@@ -94,20 +94,20 @@ namespace OpenTibia.Game.Common
         {
             if (continueWithFulfilled == null)
             {
-                continueWithFulfilled = new List<Action<TResult>>();
+                continueWithFulfilled = new LinkedList<Action<TResult>>();
             }
 
-            continueWithFulfilled.Add(next);
+            continueWithFulfilled.AddLast(next);
         }
 
         private void AddContinueWithRejected(Action<Exception> next)
         {
             if (continueWithRejected == null)
             {
-                continueWithRejected = new List<Action<Exception>>();
+                continueWithRejected = new LinkedList<Action<Exception>>();
             }
 
-            continueWithRejected.Add(next);
+            continueWithRejected.AddLast(next);
         }
 
         public TResult Result

@@ -250,9 +250,9 @@ namespace OpenTibia.Game.Common
 
         private Exception exception;
 
-        private List<Action> continueWithFulfilled;
+        private LinkedList<Action> continueWithFulfilled;
 
-        private List<Action<Exception>> continueWithRejected;
+        private LinkedList<Action<Exception>> continueWithRejected;
 
         public Promise()
         {
@@ -323,20 +323,20 @@ namespace OpenTibia.Game.Common
         {
             if (continueWithFulfilled == null)
             {
-                continueWithFulfilled = new List<Action>();
+                continueWithFulfilled = new LinkedList<Action>();
             }
 
-            continueWithFulfilled.Add(next);
+            continueWithFulfilled.AddLast(next);
         }
 
         private void AddContinueWithRejected(Action<Exception> next)
         {
             if (continueWithRejected == null)
             {
-                continueWithRejected = new List<Action<Exception>>();
+                continueWithRejected = new LinkedList<Action<Exception>>();
             }
 
-            continueWithRejected.Add(next);
+            continueWithRejected.AddLast(next);
         }
 
         public void Wait()
