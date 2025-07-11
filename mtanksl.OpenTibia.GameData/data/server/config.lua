@@ -167,7 +167,7 @@ server = {
 
 		source = "data/database.db", -- When using sqlite
 
-		host = "localhost", -- When using mysql, mssql, oracle or postgresql
+		host = "localhost", -- When using mysql, mssql, postgresql or oracle
 		port = 3306,
 		user = "root",
 		password = "",
