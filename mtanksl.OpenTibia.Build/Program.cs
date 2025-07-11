@@ -46,9 +46,9 @@ namespace mtanksl.OpenTibia.Build
 
                             WriteLine("publish\t\t\tRebuild the solution, run tests, publish and zip.");
                             WriteLine("migration-config\tCreate migration configuration file.");
-                            WriteLine("migration-add\t\tCreate migration for SQLite, MySQL, Microsoft SQL Server and Postgre SQL databases.");
-                            WriteLine("migration-remove\tRemove last migration for SQLite, MySQL, Microsoft SQL Server and Postgre SQL databases.");
-                            WriteLine("migration-script\tGenerate migration scripts for SQLite, MySQL, Microsoft SQL Server and Postgre SQL databases.");
+                            WriteLine("migration-add\t\tCreate migration for SQLite, MySQL, Microsoft SQL Server, Postgre SQL and Oracle databases.");
+                            WriteLine("migration-remove\tRemove last migration for SQLite, MySQL, Microsoft SQL Server, Postgre SQL and Oracle databases.");
+                            WriteLine("migration-script\tGenerate migration scripts for SQLite, MySQL, Microsoft SQL Server, Postgre SQL and Oracle databases.");
                             WriteLine("clear\t\t\tClear the console screen. Alternative commands: cls.");
                             WriteLine("exit\t\t\tExit this build tool.");
                             WriteLine("about\t\t\tDisplay license.");
@@ -232,6 +232,10 @@ namespace mtanksl.OpenTibia.Build
 
                                 config.PostgresqlConnectionString = Console.ReadLine();
 
+                                WriteLine("Oracle connection string:");
+
+                                config.OracleConnectionString = Console.ReadLine();
+
                                 Directory.CreateDirectory(configDirectoryPath);
 
                                 File.WriteAllBytes(configFilePath, ProtectedData.Protect(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(config) ), null, DataProtectionScope.CurrentUser) );
@@ -263,7 +267,8 @@ namespace mtanksl.OpenTibia.Build
                                         ("SQLite", "mtanksl.OpenTibia.Data.Sqlite", config.SqliteConnectionString),
                                         ("MySQL", "mtanksl.OpenTibia.Data.MySql", config.MysqlConnectionString),
                                         ("Microsoft SQL Server", "mtanksl.OpenTibia.Data.MsSql", config.MssqlConnectionString), 
-                                        ("Postgre SQL", "mtanksl.OpenTibia.Data.PostgreSql", config.PostgresqlConnectionString) } )
+                                        ("Postgre SQL", "mtanksl.OpenTibia.Data.PostgreSql", config.PostgresqlConnectionString),
+                                        ("Oracle", "mtanksl.OpenTibia.Data.Oracle", config.OracleConnectionString) } )
                                     {
                                         if ( !string.IsNullOrEmpty(item.Item3) )
                                         {
@@ -302,7 +307,8 @@ namespace mtanksl.OpenTibia.Build
                                     ("SQLite", "mtanksl.OpenTibia.Data.Sqlite", config.SqliteConnectionString),
                                     ("MySQL", "mtanksl.OpenTibia.Data.MySql", config.MysqlConnectionString),
                                     ("Microsoft SQL Server", "mtanksl.OpenTibia.Data.MsSql", config.MssqlConnectionString), 
-                                    ("Postgre SQL", "mtanksl.OpenTibia.Data.PostgreSql", config.PostgresqlConnectionString) } )
+                                    ("Postgre SQL", "mtanksl.OpenTibia.Data.PostgreSql", config.PostgresqlConnectionString),
+                                    ("Oracle", "mtanksl.OpenTibia.Data.Oracle", config.OracleConnectionString) } )
                                 {
                                     if ( !string.IsNullOrEmpty(item.Item3) )
                                     {
@@ -344,7 +350,8 @@ namespace mtanksl.OpenTibia.Build
                                     ("SQLite", "mtanksl.OpenTibia.Data.Sqlite", config.SqliteConnectionString),
                                     ("MySQL", "mtanksl.OpenTibia.Data.MySql", config.MysqlConnectionString),
                                     ("Microsoft SQL Server", "mtanksl.OpenTibia.Data.MsSql", config.MssqlConnectionString), 
-                                    ("Postgre SQL", "mtanksl.OpenTibia.Data.PostgreSql", config.PostgresqlConnectionString) } )
+                                    ("Postgre SQL", "mtanksl.OpenTibia.Data.PostgreSql", config.PostgresqlConnectionString),
+                                    ("Oracle", "mtanksl.OpenTibia.Data.Oracle", config.OracleConnectionString) } )
                                 {
                                     if ( !string.IsNullOrEmpty(item.Item3) )
                                     {
@@ -644,6 +651,8 @@ namespace mtanksl.OpenTibia.Build
             public string MssqlConnectionString { get; set; }
 
             public string PostgresqlConnectionString { get; set; }
+
+            public string OracleConnectionString { get; set; }
         }
     }
 }

@@ -47,6 +47,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{29440E96
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mtanksl.OpenTibia.Build", "mtanksl.OpenTibia.Build\mtanksl.OpenTibia.Build.csproj", "{61E88B58-6B4A-4E8F-A086-786D4DB8A187}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mtanksl.OpenTibia.Data.Oracle", "mtanksl.OpenTibia.Data.Oracle\mtanksl.OpenTibia.Data.Oracle.csproj", "{648AEF56-E650-3FAB-49CE-00942E047DEF}"
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

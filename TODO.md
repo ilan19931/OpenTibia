@@ -188,6 +188,7 @@
 	- MySQL
 	- Microsoft SQL Server 
 	- Postgre SQL
+	- Oracle
 	- In Memory
 - Server statistics
 	- Active connections

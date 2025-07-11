@@ -5,6 +5,7 @@ using OpenTibia.Data.InMemory.Contexts;
 using OpenTibia.Data.Models;
 using OpenTibia.Data.MsSql.Contexts;
 using OpenTibia.Data.MySql.Contexts;
+using OpenTibia.Data.Oracle.Contexts;
 using OpenTibia.Data.PostgreSql.Contexts;
 using OpenTibia.Data.Sqlite.Contexts;
 using OpenTibia.FileFormats.Dat;
@@ -62,13 +63,17 @@ namespace OpenTibia.Game.Common
 
                         return new PostgreSqlContext(Config.DatabaseOverrideConnectionString ?? ("Server=" + Config.DatabaseHost + ";Port=" + Config.DatabasePort + ";Database=" + Config.DatabaseName + ";User Id=" + Config.DatabaseUser + ";Password=" + Config.DatabasePassword + ";"), builder.Options);
 
+                    case "oracle":
+
+                        return new OracleContext(Config.DatabaseOverrideConnectionString ?? ("Data Source=" + Config.DatabaseHost + ";User Id=" + Config.DatabaseUser + ";Password=" + Config.DatabasePassword + ";") );
+
                     case "memory":
 
                         return new InMemoryContext(builder.Options);
 
                     default:
 
-                        throw new NotImplementedException("File config.lua parameter server.database.type must be sqlite, mysql, mssql, postgresql or memory.");
+                        throw new NotImplementedException("File config.lua parameter server.database.type must be sqlite, mysql, mssql, postgresql, oracle or memory.");
                 }
             } );
 
