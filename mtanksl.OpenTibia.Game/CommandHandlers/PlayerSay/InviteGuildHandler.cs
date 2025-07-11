@@ -40,7 +40,7 @@ namespace OpenTibia.Game.CommandHandlers
 
                                     Context.AddPacket(command.Player, new ShowWindowTextOutgoingPacket(MessageMode.Look, observer.Name + " has been invited. Exclude players with !excludeguild <player_name> command.") );
 
-                                    Context.AddPacket(observer, new ShowWindowTextOutgoingPacket(MessageMode.Look, command.Player.Name + " has invited you to " + (command.Player.Gender == Gender.Male ? "his" : "her") + " guild. Join with !joinguild " + guild.Name + " command." ) );
+                                    Context.AddPacket(observer, new ShowWindowTextOutgoingPacket(MessageMode.Look, command.Player.Name + " has invited you to " + (command.Player.Gender == Gender.Male ? "his" : "her") + " guild. Join with !joinguild \"" + guild.Name + "\" command.") );
                                 
                                     return Promise.Completed;
                                 }
