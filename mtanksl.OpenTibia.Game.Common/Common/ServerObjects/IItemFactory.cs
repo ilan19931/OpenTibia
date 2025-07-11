@@ -10,6 +10,8 @@ namespace OpenTibia.Game.Common.ServerObjects
     {
         void Start(OtbFile otbFile, DatFile datFile, ItemsFile itemsFile);
 
+        ItemMetadata GetItemMetadataByName(string name);
+
         ItemMetadata GetItemMetadataByOpenTibiaId(ushort openTibiaId);
 
         ItemMetadata GetItemMetadataByTibiaId(ushort tibiaId);

@@ -19,7 +19,17 @@ namespace OpenTibia.Game.CommandHandlers
                 {
                     ushort toOpenTibiaId;
 
-                    if (ushort.TryParse(parameters[0], out toOpenTibiaId) )
+                    if ( !ushort.TryParse(parameters[0], out toOpenTibiaId) )
+                    {
+                        ItemMetadata itemMetadata = Context.Server.ItemFactory.GetItemMetadataByName(parameters[0] );
+
+                        if (itemMetadata != null)
+                        {
+                            toOpenTibiaId = itemMetadata.OpenTibiaId;
+                        }
+                    }
+
+                    if (toOpenTibiaId > 0)
                     {
                         Tile toTile = Context.Server.Map.GetTile(command.Player.Tile.Position.Offset(command.Player.Direction) );
 
@@ -36,18 +46,31 @@ namespace OpenTibia.Game.CommandHandlers
                 {
                     ushort toOpenTibiaId;
 
-                    byte count;
-
-                    if (ushort.TryParse(parameters[0], out toOpenTibiaId) && byte.TryParse(parameters[1], out count) && count >= 1 && count <= 100)
+                    if ( !ushort.TryParse(parameters[0], out toOpenTibiaId) )
                     {
-                        Tile toTile = Context.Server.Map.GetTile(command.Player.Tile.Position.Offset(command.Player.Direction) );
+                        ItemMetadata itemMetadata = Context.Server.ItemFactory.GetItemMetadataByName(parameters[0] );
 
-                        if (toTile != null)
+                        if (itemMetadata != null)
                         {
-                            return Context.AddCommand(new TileCreateItemOrIncrementCommand(toTile, toOpenTibiaId, count) ).Then( () =>
+                            toOpenTibiaId = itemMetadata.OpenTibiaId;
+                        }
+                    }
+
+                    if (toOpenTibiaId > 0)
+                    {
+                        byte count;
+
+                        if (byte.TryParse(parameters[1], out count) && count >= 1 && count <= 100)
+                        {
+                            Tile toTile = Context.Server.Map.GetTile(command.Player.Tile.Position.Offset(command.Player.Direction) );
+
+                            if (toTile != null)
                             {
-                                return Context.AddCommand(new ShowMagicEffectCommand(toTile.Position, MagicEffectType.BlueShimmer) );
-                            } );
+                                return Context.AddCommand(new TileCreateItemOrIncrementCommand(toTile, toOpenTibiaId, count) ).Then( () =>
+                                {
+                                    return Context.AddCommand(new ShowMagicEffectCommand(toTile.Position, MagicEffectType.BlueShimmer) );
+                                } );
+                            }
                         }
                     }
                 }

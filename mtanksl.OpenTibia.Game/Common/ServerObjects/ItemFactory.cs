@@ -53,6 +53,8 @@ namespace OpenTibia.Game.Common.ServerObjects
                 doors.Add(item);
             }
 
+            itemMetadatas = new List<ItemMetadata>();
+
             openTibiaMetadatas = new Dictionary<ushort, ItemMetadata>(datFile.Items.Count);
 
             tibiaMetadatas = new Dictionary<ushort, List<ItemMetadata> >(datFile.Items.Count);
@@ -72,6 +74,8 @@ namespace OpenTibia.Game.Common.ServerObjects
                         DamageTakenFromElements = new Dictionary<DamageType, double>()
                     };
 
+                    itemMetadatas.Add(metadata);
+
                     if (otbItem.Flags.Is(FileFormats.Otb.ItemFlags.AllowDistanceRead) )
                     {
                         metadata.Flags |= ItemMetadataFlags.AllowDistanceRead;
@@ -85,7 +89,7 @@ namespace OpenTibia.Game.Common.ServerObjects
                     {
                         metadatas = new List<ItemMetadata>();
 
-                        tibiaMetadatas.Add(otbItem.TibiaId, metadatas);                        
+                        tibiaMetadatas.Add(otbItem.TibiaId, metadatas);
                     }
 
                     metadatas.Add(metadata);
@@ -482,6 +486,15 @@ namespace OpenTibia.Game.Common.ServerObjects
                     }
                 }
             }
+        }
+
+        private List<ItemMetadata> itemMetadatas;
+
+        public ItemMetadata GetItemMetadataByName(string name) 
+        {
+            return itemMetadatas
+                .Where(i => i.Name == name)
+                .FirstOrDefault();
         }
 
         private Dictionary<ushort, ItemMetadata> openTibiaMetadatas;
