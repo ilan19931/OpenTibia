@@ -57,7 +57,7 @@ registertalkactionsplayersay("/tp", function(player, message)
 				if space then
 					local seconds = tonumber(string.sub(message, space + 1))
 					if seconds and seconds > 0 then
-						function loop(seconds)
+						local function loop(seconds)
 							if seconds > 0 then						
 								command.showanimatedtext(position, animatedtextcolor.blue, seconds)
 								command.delay(item, 1 * 1000, function()

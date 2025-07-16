@@ -32,18 +32,18 @@ function stage:areaspawn(name, minamount, maxamount, centerx, centery, centerz, 
 end
 
 function stage:execute()
-	function announce(message)
+	local function announce(message)
 		local players = command.gameobjectsgetplayers()
 		for _, player in ipairs(players) do
 			command.showwindowtext(player, messagemode.game, message)
 		end
 	end
 
-	function singlespawn(name, centerx, centery, centerz, radius) 
+	local function singlespawn(name, centerx, centery, centerz, radius) 
 		areaspawn(name, 1, 1, centerx, centery, centerz, radius)
 	end
 
-	function areaspawn(name, minamount, maxamount, centerx, centery, centerz, radius)
+	local function areaspawn(name, minamount, maxamount, centerx, centery, centerz, radius)
 		for i = 1, math.random(minamount, maxamount) do
 			for j = 1, 10 do
 				local tile = command.mapgettile( { x = centerx + math.random(-radius, radius), y = centery + math.random(-radius, radius), z = centerz } )
@@ -65,7 +65,7 @@ function stage:execute()
 		end
 	end
 
-	function despawn()
+	local function despawn()
 		for _, monster in ipairs(self.monsters) do
 			if monster.Tile and not monster.IsDestroyed then
 				command.showmagiceffect(monster, magiceffecttype.puff)
