@@ -18,6 +18,11 @@ namespace OpenTibia.Common
         {
             if (Keys == null)
             {
+                if ( !server.Features.HasFeatureFlag(FeatureFlag.ProtocolChecksum) )
+                {
+                    return Length(bytes);
+                }
+
                 return Length(Hash(Length(bytes) ) );
             }
 

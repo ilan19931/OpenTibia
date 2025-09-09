@@ -101,7 +101,14 @@ namespace OpenTibia.Network.Packets.Outgoing
                 writer.Write(Experience);
             }
 
-            writer.Write(Level);
+            if ( !features.HasFeatureFlag(FeatureFlag.LevelUInt16) )
+            {
+                writer.Write( (byte)Level);
+            }
+            else
+            {
+                writer.Write(Level);
+            }
 
             writer.Write(LevelPercent);
 
@@ -138,7 +145,10 @@ namespace OpenTibia.Network.Packets.Outgoing
 
             writer.Write(MagicLevelPercent);
 
-            writer.Write(Soul);
+            if (features.HasFeatureFlag(FeatureFlag.PlayerSoul) )
+            {
+                writer.Write(Soul);
+            }
 
             if (features.HasFeatureFlag(FeatureFlag.PlayerStamina) )
             {

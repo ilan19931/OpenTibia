@@ -27,24 +27,21 @@ namespace OpenTibia.Game.Commands
 
         public override Promise Execute()
         {                  
-            if ( !( Player.Rank == Rank.Gamemaster || Player.Rank == Rank.AccountManager || Player.IsDestroyed) )
+            if (Context.Server.Features.HasFeatureFlag(FeatureFlag.PlayerSoul) && !( Player.Rank == Rank.Gamemaster || Player.Rank == Rank.AccountManager || Player.IsDestroyed )  && Player.Soul != Soul)
             {
-                if (Player.Soul != Soul)
-                {
-                    Player.Soul = Soul;
+                Player.Soul = Soul;
 
-                    Context.AddPacket(Player, new SendStatusOutgoingPacket(
-                        Player.Health, Player.MaxHealth, 
-                        Player.Capacity, Player.MaxCapacity,
-                        Player.Experience, Player.Level, Player.LevelPercent, 
-                        Player.Mana, Player.MaxMana, 
-                        Player.Skills.GetClientSkillLevel(Skill.MagicLevel), Player.Skills.GetSkillLevel(Skill.MagicLevel), Player.Skills.GetSkillPercent(Skill.MagicLevel), 
-                        Player.Soul, 
-                        Player.Stamina,
-                        Player.BaseSpeed) );
+                Context.AddPacket(Player, new SendStatusOutgoingPacket(
+                    Player.Health, Player.MaxHealth, 
+                    Player.Capacity, Player.MaxCapacity,
+                    Player.Experience, Player.Level, Player.LevelPercent, 
+                    Player.Mana, Player.MaxMana, 
+                    Player.Skills.GetClientSkillLevel(Skill.MagicLevel), Player.Skills.GetSkillLevel(Skill.MagicLevel), Player.Skills.GetSkillPercent(Skill.MagicLevel), 
+                    Player.Soul, 
+                    Player.Stamina,
+                    Player.BaseSpeed) );
 
-                    Context.AddEvent(new PlayerUpdateSoulEventArgs(Player, Soul) );
-                }
+                Context.AddEvent(new PlayerUpdateSoulEventArgs(Player, Soul) );
             }
 
             return Promise.Completed;

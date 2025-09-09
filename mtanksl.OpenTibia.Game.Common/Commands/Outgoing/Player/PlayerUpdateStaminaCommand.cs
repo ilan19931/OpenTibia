@@ -22,7 +22,7 @@ namespace OpenTibia.Game.Commands
 
         public override Promise Execute()
         {                    
-            if (Player.Stamina != Stamina)
+            if (Context.Server.Features.HasFeatureFlag(FeatureFlag.PlayerStamina) && Player.Stamina != Stamina)
             {
                 Player.Stamina = Stamina;
 

@@ -1,6 +1,5 @@
 ﻿using OpenTibia.Common.Objects;
 using OpenTibia.Common.Structures;
-using OpenTibia.FileFormats.Dat;
 using OpenTibia.FileFormats.Otb;
 using OpenTibia.FileFormats.Xml.Items;
 using OpenTibia.Game.GameObjectScripts;
@@ -8,7 +7,6 @@ using OpenTibia.Game.Plugins;
 using System.Collections.Generic;
 using System.Linq;
 using Item = OpenTibia.Common.Objects.Item;
-using ItemFlags = OpenTibia.FileFormats.Dat.ItemFlags;
 
 namespace OpenTibia.Game.Common.ServerObjects
 {
@@ -25,7 +23,7 @@ namespace OpenTibia.Game.Common.ServerObjects
             this.server = server;
         }
 
-        public void Start(OtbFile otbFile, DatFile datFile, ItemsFile itemsFile)
+        public void Start(OtbFile otbFile, ItemsFile itemsFile)
         {
             magicForcefields = server.Values.GetUInt16HashSet("values.items.magicForcefields");
 
@@ -55,9 +53,9 @@ namespace OpenTibia.Game.Common.ServerObjects
 
             itemMetadatas = new List<ItemMetadata>();
 
-            openTibiaMetadatas = new Dictionary<ushort, ItemMetadata>(datFile.Items.Count);
+            openTibiaMetadatas = new Dictionary<ushort, ItemMetadata>();
 
-            tibiaMetadatas = new Dictionary<ushort, List<ItemMetadata> >(datFile.Items.Count);
+            tibiaMetadatas = new Dictionary<ushort, List<ItemMetadata> >();
 
             foreach (var otbItem in otbFile.Items)
             {
@@ -74,12 +72,144 @@ namespace OpenTibia.Game.Common.ServerObjects
                         DamageTakenFromElements = new Dictionary<DamageType, double>()
                     };
 
-                    itemMetadatas.Add(metadata);
+                    if (otbItem.Group == ItemGroup.Ground)
+                    {
+                        metadata.TopOrder = TopOrder.Ground;
+                    }
+                    else if (otbItem.TopOrder == TopOrder.HighPriority)
+                    {
+                        metadata.TopOrder = TopOrder.HighPriority;
+                    }
+                    else if (otbItem.TopOrder == TopOrder.MediumPriority)
+                    {
+                        metadata.TopOrder = TopOrder.MediumPriority;
+                    }
+                    else if (otbItem.TopOrder == TopOrder.LowPriority)
+                    {
+                        metadata.TopOrder = TopOrder.LowPriority;
+                    }
+                    else
+                    {
+                        metadata.TopOrder = TopOrder.Other;
+                    }
 
-                    if (otbItem.Flags.Is(FileFormats.Otb.ItemFlags.AllowDistanceRead) )
+                    if (otbItem.Group == ItemGroup.Container)
+                    {
+                        metadata.Flags |= ItemMetadataFlags.IsContainer;
+                    }
+
+                    if (otbItem.Flags.Is(ItemFlags.Stackable) )
+                    {
+                        metadata.Flags |= ItemMetadataFlags.Stackable;
+                    }
+
+                    if (otbItem.Flags.Is(ItemFlags.Useable) )
+                    {
+                        metadata.Flags |= ItemMetadataFlags.Useable;
+                    }
+
+                    // if (otbItem.Flags.Is(ItemFlags.Writeable) )
+                    // {
+                    //     metadata.Flags |= ItemMetadataFlags.Writeable;
+                    // }
+                      
+                    if (otbItem.Flags.Is(ItemFlags.Readable) )
+                    {
+                        metadata.Flags |= ItemMetadataFlags.Readable;
+                    }
+
+                    if (otbItem.Group == ItemGroup.Fluid)
+                    {
+                        metadata.Flags |= ItemMetadataFlags.IsFluid;
+                    }
+
+                    if (otbItem.Group == ItemGroup.Splash)
+                    {
+                        metadata.Flags |= ItemMetadataFlags.IsSplash;
+                    }
+
+                    if (otbItem.Flags.Is(ItemFlags.NotWalkable) )
+                    {
+                        metadata.Flags |= ItemMetadataFlags.NotWalkable;
+                    }
+
+                    if ( !otbItem.Flags.Is(ItemFlags.Moveable) )
+                    {
+                        metadata.Flags |= ItemMetadataFlags.NotMoveable;
+                    }
+
+                    if (otbItem.Flags.Is(ItemFlags.BlockProjectile) )
+                    {
+                        metadata.Flags |= ItemMetadataFlags.BlockProjectile;
+                    }
+
+                    if (otbItem.Flags.Is(ItemFlags.BlockPathFinding) )
+                    {
+                        metadata.Flags |= ItemMetadataFlags.BlockPathFinding;
+                    }
+
+                    if (otbItem.Flags.Is(ItemFlags.Pickupable) )
+                    {
+                        metadata.Flags |= ItemMetadataFlags.Pickupable;
+                    }
+
+                    if (otbItem.Flags.Is(ItemFlags.Hangable) )
+                    {
+                        metadata.Flags |= ItemMetadataFlags.Hangable;
+                    }
+
+                    if (otbItem.Flags.Is(ItemFlags.Horizontal) )
+                    {
+                        metadata.Flags |= ItemMetadataFlags.Horizontal;
+                    }
+
+                    if (otbItem.Flags.Is(ItemFlags.Vertical) )
+                    {
+                        metadata.Flags |= ItemMetadataFlags.Vertical;
+                    }
+
+                    if (otbItem.Flags.Is(ItemFlags.Rotatable) )
+                    {
+                        metadata.Flags |= ItemMetadataFlags.Rotatable;
+                    }
+
+                    if (otbItem.Flags.Is(ItemFlags.HasHeight) )
+                    {
+                        metadata.Flags |= ItemMetadataFlags.HasHeight;
+                    }
+
+                    if (otbItem.Flags.Is(ItemFlags.AllowDistanceRead) )
                     {
                         metadata.Flags |= ItemMetadataFlags.AllowDistanceRead;
                     }
+
+                    if (otbItem.Flags.Is(ItemFlags.Animation) )
+                    {
+                        metadata.Flags |= ItemMetadataFlags.IsAnimated;
+                    }
+
+                    // if (datItem.Flags.Is(ItemFlags.Wrappable) )
+                    // {
+                    //     metadata.Flags |= ItemMetadataFlags.Wrappable;
+                    // }
+
+                    // if (datItem.Flags.Is(ItemFlags.Unwrappable) )
+                    // {
+                    //     metadata.Flags |= ItemMetadataFlags.Unwrappable;
+                    // }
+
+                    metadata.GroundSpeed = otbItem.Speed;
+
+                    metadata.MaxWriteChars = otbItem.MaxReadWriteChars;
+
+                    metadata.MaxReadChars = otbItem.MaxReadChars;
+
+                    if (otbItem.LightLevel > 0 || otbItem.LightColor > 0)
+                    {
+                        metadata.Light = new Light( (byte)otbItem.LightLevel, (byte)otbItem.LightColor);
+                    }
+
+                    itemMetadatas.Add(metadata);
 
                     openTibiaMetadatas.Add(otbItem.OpenTibiaId, metadata);
 
@@ -93,144 +223,6 @@ namespace OpenTibia.Game.Common.ServerObjects
                     }
 
                     metadatas.Add(metadata);
-                }
-            }
-
-            foreach (var datItem in datFile.Items)
-            {
-                foreach (var metadata in tibiaMetadatas[datItem.TibiaId] )
-                {
-                    if (datItem.Flags.Is(ItemFlags.IsGround) )
-                    {
-                        metadata.TopOrder = TopOrder.Ground;
-                    }
-                    else if (datItem.Flags.Is(ItemFlags.AlwaysOnTop1) )
-                    {
-                        metadata.TopOrder = TopOrder.HighPriority;
-                    }
-                    else if (datItem.Flags.Is(ItemFlags.AlwaysOnTop2) )
-                    {
-                        metadata.TopOrder = TopOrder.MediumPriority;
-                    }
-                    else if (datItem.Flags.Is(ItemFlags.AlwaysOnTop3) )
-                    {
-                        metadata.TopOrder = TopOrder.LowPriority;
-                    }
-                    else
-                    {
-                        metadata.TopOrder = TopOrder.Other;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.IsContainer) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.IsContainer;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.Stackable) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.Stackable;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.Useable) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.Useable;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.Writeable) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.Writeable;
-                    }
-                      
-                    if (datItem.Flags.Is(ItemFlags.Readable) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.Readable;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.IsFluid) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.IsFluid;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.IsSplash) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.IsSplash;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.NotWalkable) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.NotWalkable;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.NotMoveable) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.NotMoveable;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.BlockProjectile) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.BlockProjectile;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.BlockPathFinding) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.BlockPathFinding;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.Pickupable) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.Pickupable;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.Hangable) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.Hangable;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.Horizontal) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.Horizontal;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.Vertical) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.Vertical;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.Rotatable) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.Rotatable;
-                    }
-
-                    if (datItem.ItemHeight > 0)
-                    {
-                        metadata.Flags |= ItemMetadataFlags.HasHeight;
-                    }
-
-                    if (datItem.Animations > 1)
-                    {
-                        metadata.Flags |= ItemMetadataFlags.IsAnimated;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.Wrappable) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.Wrappable;
-                    }
-
-                    if (datItem.Flags.Is(ItemFlags.Unwrappable) )
-                    {
-                        metadata.Flags |= ItemMetadataFlags.Unwrappable;
-                    }
-
-                    metadata.GroundSpeed = datItem.Speed;
-
-                    metadata.MaxWriteChars = datItem.MaxWriteChars;
-
-                    metadata.MaxReadChars = datItem.MaxReadChars;
-
-                    if (datItem.LightLevel > 0 || datItem.LightColor > 0)
-                    {
-                        metadata.Light = new Light( (byte)datItem.LightLevel, (byte)datItem.LightColor);
-                    }
                 }
             }
 

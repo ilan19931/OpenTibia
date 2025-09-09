@@ -2,6 +2,8 @@
 {
     public enum FeatureFlag
     {
+        PlayerSoul,
+        LevelUInt16,
         LookTypeUInt16,
         MessageStatement,
         LoginPacketEncryption,
@@ -45,7 +47,6 @@
         PurseSlot,
         ClientPing,
         CreatureUnpass,
-        SpritesUInt32,
         OfflineTrainingTime,
         AdditionalVipInfo,
         JoinNpcTradeU64,
@@ -57,17 +58,14 @@
         BrowseField,
         ThingMarks,
         PVPMode,
-        NoMovementAnimation,
         GroupWorlds,
         SkillLevelU16,
         CreatureIcons,
         HideNpcNames,
         PremiumExpiration,
-        EnhancedAnimations,
         ExperienceGainRate,
-        PVPFrame,
+        PVPFrame, //TODO: Which version was this implemented?
         DeathType,
-        IdleAnimations,
         ExpertMode,
         OGLInformation,
         ContentRevision,

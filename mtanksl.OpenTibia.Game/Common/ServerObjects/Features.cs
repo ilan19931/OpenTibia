@@ -19,7 +19,16 @@ namespace OpenTibia.Game.Common.ServerObjects
         {
 			#region Clients
 
-			if (server.Config.ClientVersion == new Version(7, 72) )
+			if (server.Config.ClientVersion == new Version(7, 40) )
+			{
+                clientVersion = 740;
+                tibiaDat = 1103061404;
+                tibiaPic = 1100782760;
+                tibiaSpr = 1102703238;
+
+                Outfit.Swimming = Outfit.Invisible;
+            }
+			else if (server.Config.ClientVersion == new Version(7, 72) )
 			{
                 clientVersion = 772;
                 tibiaDat = 1134385715;
@@ -67,9 +76,15 @@ namespace OpenTibia.Game.Common.ServerObjects
 
             featureFlags.Add(FeatureFlag.RuleViolationChannel);
 
+			if (clientVersion >= 760)
+			{                
+                featureFlags.Add(FeatureFlag.PlayerSoul);
+                featureFlags.Add(FeatureFlag.LevelUInt16);
+            }
+
             if (clientVersion >= 770)
 			{
-				featureFlags.Add(FeatureFlag.LookTypeUInt16);
+                featureFlags.Add(FeatureFlag.LookTypeUInt16);
 				featureFlags.Add(FeatureFlag.MessageStatement);
 				featureFlags.Add(FeatureFlag.LoginPacketEncryption);
 			}
@@ -183,7 +198,6 @@ namespace OpenTibia.Game.Common.ServerObjects
 
 			if (clientVersion >= 960) 
 			{
-                featureFlags.Add(FeatureFlag.SpritesUInt32);
                 featureFlags.Add(FeatureFlag.OfflineTrainingTime);
             }
 
@@ -223,7 +237,6 @@ namespace OpenTibia.Game.Common.ServerObjects
 
 			if (clientVersion >= 1010)
             {
-                featureFlags.Add(FeatureFlag.NoMovementAnimation);
                 featureFlags.Add(FeatureFlag.GroupWorlds);
             }
 
@@ -242,11 +255,6 @@ namespace OpenTibia.Game.Common.ServerObjects
 				featureFlags.Add(FeatureFlag.PremiumExpiration);
 			}
 
-			if (clientVersion >= 1050) 
-			{
-				featureFlags.Add(FeatureFlag.EnhancedAnimations);
-			}
-
 			if (clientVersion >= 1054)
 			{
 				featureFlags.Add(FeatureFlag.ExperienceGainRate);
@@ -256,11 +264,6 @@ namespace OpenTibia.Game.Common.ServerObjects
 			if (clientVersion >= 1055) 
 			{
 				featureFlags.Add(FeatureFlag.DeathType);
-			}
-
-			if (clientVersion >= 1057) 
-			{
-				featureFlags.Add(FeatureFlag.IdleAnimations);
 			}
 
 			if (clientVersion >= 1058)
@@ -540,7 +543,7 @@ namespace OpenTibia.Game.Common.ServerObjects
 				MapMessageMode(26, MessageMode.Failure);                    // Tested
                 MapMessageMode(27, MessageMode.Blue);
 			}
-			else if (clientVersion >= 760)
+			else if (clientVersion >= 740)
 			{
 				MapMessageMode(0, MessageMode.None);
 				MapMessageMode(1, MessageMode.Say);							// Tested
@@ -1374,7 +1377,11 @@ namespace OpenTibia.Game.Common.ServerObjects
 
 		public byte GetByteForMagicEffectType(MagicEffectType magicEffectType)
         {
-            if (clientVersion < 780)
+			if (clientVersion < 770)
+			{
+				magicEffectType = magicEffectType - 1;
+			}
+            else if (clientVersion < 780)
             {
                 if (magicEffectType >= MagicEffectType.Bubbles)
                 {
@@ -1403,7 +1410,11 @@ namespace OpenTibia.Game.Common.ServerObjects
 
 		public byte GetByteForProjectileType(ProjectileType projectileType)
         {
-            if (clientVersion < 780)
+			if (clientVersion < 770)
+			{
+                projectileType = projectileType - 1;
+			}
+            else if (clientVersion < 780)
             {
                 if (projectileType >= ProjectileType.ViperStar)
                 {

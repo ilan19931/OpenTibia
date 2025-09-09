@@ -27,7 +27,7 @@ namespace OpenTibia.Network.Packets.Outgoing
 
                 writer.Write( (byte)FrameColor );
             }
-            else //TODO: Which version was this implemented?
+            else 
             {
                 writer.Write( (byte)0x93);
 

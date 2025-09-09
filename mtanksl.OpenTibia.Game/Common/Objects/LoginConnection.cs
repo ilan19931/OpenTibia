@@ -54,11 +54,14 @@ namespace OpenTibia.Common
                             skip += 1;
                         }
 
-                        Rsa.DecryptAndReplace(body, skip, 128); // Keys, Account and Password
-
-                        if (server.Features.HasFeatureFlag(FeatureFlag.Authenticator) )
+                        if (server.Features.HasFeatureFlag(FeatureFlag.LoginPacketEncryption) )
                         {
-                            Rsa.DecryptAndReplace(body, length - 128, 128); // AuthenticatorCode
+                            Rsa.DecryptAndReplace(body, skip, 128); // Keys, Account and Password
+
+                            if (server.Features.HasFeatureFlag(FeatureFlag.Authenticator) )
+                            {
+                                Rsa.DecryptAndReplace(body, length - 128, 128); // AuthenticatorCode
+                            }
                         }
                     }
                     else

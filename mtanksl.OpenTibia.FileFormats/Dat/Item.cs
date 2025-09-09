@@ -11,8 +11,16 @@ namespace OpenTibia.FileFormats.Dat
 {
     public class Item
     {
-        public static Item Load(ByteArrayStreamReader reader, bool spritesUInt32, bool idleAnimations, bool enhancedAnimations, bool noMovementAnimation)
+        public static Item Load(ByteArrayStreamReader reader, bool outfit, int clientVersion)
         {
+            bool spritesUInt32 = clientVersion >= 960;
+
+            bool idleAnimations = outfit && clientVersion >= 1057;
+
+            bool enhancedAnimations = clientVersion >= 1050;
+
+            bool noMovementAnimation = clientVersion >= 1010;
+
             Item item = new Item();
 
             while (true)
@@ -30,6 +38,8 @@ namespace OpenTibia.FileFormats.Dat
                         attribute -= 1;
                     }
                 }
+
+                //TODO: Support older client versions
 
                 switch ( (DatAttribute)attribute)
                 {

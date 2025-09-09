@@ -2,7 +2,7 @@ IP_ADDRESS = "127.0.0.1"
 LOGIN_PORT = 7171
 GAME_PORT = 7172
 INFO_PORT = 7173
-CLIENT_VERSION = "8.60" -- "7.72" (experimental), "8.60" (stable), "8.70" (experimental), "9.86" (experimental), "10.98" (experimental)
+CLIENT_VERSION = "8.60" -- "7.40" (experimental), "7.72" (experimental), "8.60" (stable), "8.70" (experimental), "9.86" (experimental), "10.98" (experimental)
 
 server = {
 	info = {
@@ -39,7 +39,7 @@ server = {
 			accountname = "",
 			accountpassword = "",
 			playername = "Account Manager",
-			playerposition = { x = 915, y = 769, z = 6 },
+			playerposition = { x = 921, y = 771, z = 6 },
 			playernewposition = { x = 921, y = 771, z = 6 },
 			worldname = "Cormaya",
 			ipaddress = IP_ADDRESS,

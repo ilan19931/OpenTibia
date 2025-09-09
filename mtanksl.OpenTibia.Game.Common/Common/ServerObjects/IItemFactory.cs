@@ -8,7 +8,7 @@ namespace OpenTibia.Game.Common.ServerObjects
 {
     public interface IItemFactory
     {
-        void Start(OtbFile otbFile, DatFile datFile, ItemsFile itemsFile);
+        void Start(OtbFile otbFile, ItemsFile itemsFile);
 
         ItemMetadata GetItemMetadataByName(string name);
 

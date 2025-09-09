@@ -1,6 +1,6 @@
 # What is this?
 
-It is an open Tibia server written in C# from scratch. Base protocol is 8.60. Experimental support for other protocols, ranging from 7.72 to 10.98.
+It is an open Tibia server written in C# from scratch. Base protocol is 8.60. Experimental support for other protocols, ranging from 7.40 to 10.98.
 
 # Why another one?
 
@@ -65,6 +65,10 @@ Go to `\mtanksl.OpenTibia.Host.GUI\MainForm.resx` file in Windows File Explorer.
 
 Lua debugger is disabled by default. On Windows, go to `\mtanksl.OpenTibia.GameData\data\lualibs\` and rename the file `_mobdebug.lua` to `mobdebug.lua`. See [How to debug scripts](https://github.com/mtanksl/OpenTibia/wiki/lua-how-to-debug) and [How to add autocomplete](https://github.com/mtanksl/OpenTibia/wiki/lua-how-to-add-autocomplete) for additional info.
 
+> I want to play using official Tibia 7.4 client, but the framerate is too low.
+
+To play using official Tibia 7.4 client, your machine needs DirectX 5, which is old. You can set up a [Virtual Machine](https://knowledge.broadcom.com/external/article/344595/downloading-and-installing-vmware-workst.html) only for the game, with, for example, [Windows XP](https://os.click/en/Windows:Windows_XP:2600.5512:Professional:en:x86), install the client, ip changer and [.NET Framework 3.5 SP1](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net35-sp1). Beware, nostalgia will hit you hard.
+
 # Other resources
 
 ### Map editor (.otbm)
@@ -86,6 +90,11 @@ You can use [OTItemEditor](https://github.com/opentibia/item-editor).
 ### Lua IDE (.lua)
 
 You can use [ZeroBrane Studio IDE](https://studio.zerobrane.com).
+
+
+### Tibia 7.40 client
+
+You can download the official release direct from here [4Shared](https://www.4shared.com/s/fpMjN_Qslfa).
 
 ### Tibia 7.72 client
 

@@ -57,18 +57,21 @@ namespace OpenTibia.Network.Packets.Incoming
 
             int position = reader.BaseStream.Position;
 
-            reader.BaseStream.Seek(Origin.Current, 1); // 0x00
-
-            Keys = new uint[]
+            if (features.HasFeatureFlag(FeatureFlag.LoginPacketEncryption) )
             {
-                reader.ReadUInt(),
+                reader.BaseStream.Seek(Origin.Current, 1); // 0x00
 
-                reader.ReadUInt(),
+                Keys = new uint[]
+                {
+                    reader.ReadUInt(),
 
-                reader.ReadUInt(),
+                    reader.ReadUInt(),
 
-                reader.ReadUInt()
-            };
+                    reader.ReadUInt(),
+
+                    reader.ReadUInt()
+                };
+            }
 
             Gamemaster = reader.ReadBool();
 

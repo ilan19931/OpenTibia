@@ -71,7 +71,10 @@ namespace OpenTibia.Common
                             skip += 1;
                         }
 
-                        Rsa.DecryptAndReplace(body, skip, 128); // Account, Password, Character and AuthenticatorCode
+                        if (server.Features.HasFeatureFlag(FeatureFlag.LoginPacketEncryption) )
+                        {
+                            Rsa.DecryptAndReplace(body, skip, 128); // Account, Password, Character and AuthenticatorCode
+                        }
                     }
                     else
                     {
@@ -82,9 +85,12 @@ namespace OpenTibia.Common
                             skip += 4;
                         }
 
-                        Xtea.DecryptAndReplace(body, skip, length - skip, 32, Keys);
+                        if (server.Features.HasFeatureFlag(FeatureFlag.LoginPacketEncryption) )
+                        {
+                            Xtea.DecryptAndReplace(body, skip, length - skip, 32, Keys);
 
-                        stream.Seek(Origin.Current, 2);
+                            stream.Seek(Origin.Current, 2);
+                        }
                     }
 
                     byte identification = reader.ReadByte();
