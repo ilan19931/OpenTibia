@@ -7,6 +7,8 @@ namespace OpenTibia.Common.Objects
 {
     public class Tile : IContainer
     {
+        public static bool ReverseCreatureStack = false;
+
         private static HashSet<ushort> fields = new HashSet<ushort>() 
         {             
             // Blades
@@ -315,53 +317,118 @@ namespace OpenTibia.Common.Objects
                 recomputableSource.Change();
             }
 
-            //13 Other 1
-            //12 Other 2 
-            //11 Other 3
-            //10 Creature 3
-            //9 Creature 2
-            //8 Creature 1
-            //7 LowPriority 2
-            //6 LowPriority 1
-            //5 MediumPriority 2
-            //4 MediumPriority 1
-            //3 HighPriority 2
-            //2 HighPriority 1
-            //1 Ground 2
-            //0 Ground 1
-
-            int index = 0;
-
-            if (content.TopOrder == TopOrder.Other)
+            if (ReverseCreatureStack)
             {
-                while (index < contents.Count)
-                {
-                    if (contents[index].TopOrder == TopOrder.Other)
-                    {
-                        break;
-                    }
+                //13 Other 1
+                //12 Other 2 
+                //11 Other 3
+                //10 Creature 1
+                //9 Creature 2
+                //8 Creature 3
+                //7 LowPriority 2
+                //6 LowPriority 1
+                //5 MediumPriority 2
+                //4 MediumPriority 1
+                //3 HighPriority 2
+                //2 HighPriority 1
+                //1 Ground 2
+                //0 Ground 1
 
-                    index++;
+                int index = 0;
+
+                if (content.TopOrder == TopOrder.Other)
+                {
+                    while (index < contents.Count)
+                    {
+                        if (contents[index].TopOrder == TopOrder.Other)
+                        {
+                            break;
+                        }
+
+                        index++;
+                    }
                 }
+                else if (content.TopOrder == TopOrder.Creature)
+                {
+                    while (index < contents.Count)
+                    {
+                        if (contents[index].TopOrder == TopOrder.Creature || contents[index].TopOrder == TopOrder.Other)
+                        {
+                            break;
+                        }
+
+                        index++;
+                    }
+                }
+                else
+                {
+                    while (index < contents.Count)
+                    {
+                        if (contents[index].TopOrder > content.TopOrder)
+                        {
+                            break;
+                        }
+
+                        index++;
+                    }
+                }
+
+                contents.Insert(index, content);
+
+                content.Parent = this;
+
+                return index;
             }
             else
             {
-                while (index < contents.Count)
+                //13 Other 1
+                //12 Other 2 
+                //11 Other 3
+                //10 Creature 3
+                //9 Creature 2
+                //8 Creature 1
+                //7 LowPriority 2
+                //6 LowPriority 1
+                //5 MediumPriority 2
+                //4 MediumPriority 1
+                //3 HighPriority 2
+                //2 HighPriority 1
+                //1 Ground 2
+                //0 Ground 1
+
+                int index = 0;
+
+                if (content.TopOrder == TopOrder.Other)
                 {
-                    if (contents[index].TopOrder > content.TopOrder)
+                    while (index < contents.Count)
                     {
-                        break;
+                        if (contents[index].TopOrder == TopOrder.Other)
+                        {
+                            break;
+                        }
+
+                        index++;
                     }
-
-                    index++;
                 }
-            }
+                else
+                {
+                    while (index < contents.Count)
+                    {
+                        if (contents[index].TopOrder > content.TopOrder)
+                        {
+                            break;
+                        }
 
-            contents.Insert(index, content);
+                        index++;
+                    }
+                }
 
-            content.Parent = this;
+                contents.Insert(index, content);
 
-            return index;
+                content.Parent = this;
+
+                return index;
+            }           
         }
 
         /// <exception cref="NotSupportedException"></exception>

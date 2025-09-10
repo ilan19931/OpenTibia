@@ -1,4 +1,5 @@
-﻿using OpenTibia.Common.Structures;
+﻿using OpenTibia.Common.Objects;
+using OpenTibia.Common.Structures;
 using OpenTibia.Game.Commands;
 using OpenTibia.Network.Packets.Incoming;
 using System;
@@ -27,8 +28,10 @@ namespace OpenTibia.Game.Common.ServerObjects
                 tibiaSpr = 1102703238;
 
                 Outfit.Swimming = Outfit.Invisible;
+
+				Tile.ReverseCreatureStack = true;
             }
-			else if (server.Config.ClientVersion == new Version(7, 72) )
+            else if (server.Config.ClientVersion == new Version(7, 72) )
 			{
                 clientVersion = 772;
                 tibiaDat = 1134385715;
@@ -36,6 +39,8 @@ namespace OpenTibia.Game.Common.ServerObjects
                 tibiaSpr = 1134056126;
 
 				Outfit.Swimming = Outfit.Invisible;
+
+				Tile.ReverseCreatureStack = true;
             }
             else if (server.Config.ClientVersion == new Version(8, 60) )
             {
