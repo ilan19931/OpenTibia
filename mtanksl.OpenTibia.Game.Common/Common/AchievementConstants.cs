@@ -33,7 +33,7 @@
         public static readonly int DoNotDisturb = 100009;
 
         // https://tibia.fandom.com/wiki/Fireworks_in_the_Sky
-        public static int FireworksInTheSky = 100010;
+        public static readonly int FireworksInTheSky = 100010;
 
         // https://tibia.fandom.com/wiki/Happy_Farmer
         public static readonly int HappyFarmer = 100011;
