@@ -1,4 +1,13 @@
 ﻿channels = {
+	{ id = 0, name = "Guild", flags = channelflag.guild, clientversion = 740 },
+	{ id = 2, name = "Rule Violations", flags = channelflag.ruleviolations, clientversion = 740 },
+	{ id = 3, name = "Tutor", flags = channelflag.tutor, clientversion = 740 },
+	{ id = 4, name = "Game-Chat", flags = 0, clientversion = 740 },
+	{ id = 5, name = "RL-Chat", flags = 0, clientversion = 740 },
+	{ id = 6, name = "Trade", flags = channelflag.trade | channelflag.traderookgaard, clientversion = 740 },
+	{ id = 7, name = "Help", flags = channelflag.help, clientversion = 740 },
+	{ id = 8, name = "Gamemaster", flags = channelflag.gamemaster, clientversion = 740 },
+
 	{ id = 0, name = "Guild", flags = channelflag.guild, clientversion = 772 },
 	{ id = 2, name = "Rule Violations", flags = channelflag.ruleviolations, clientversion = 772 },
 	{ id = 3, name = "Tutor", flags = channelflag.tutor, clientversion = 772 },
