@@ -45,7 +45,10 @@ namespace OpenTibia.Network.Packets.Outgoing
 
             writer.Write(Text);
 
-            writer.Write(Author);
+            if (features.HasFeatureFlag(FeatureFlag.ReadableItemAuthor) )
+            {
+                writer.Write(Author);
+            }
 
             if (features.HasFeatureFlag(FeatureFlag.ReadableItemDate) )
             {

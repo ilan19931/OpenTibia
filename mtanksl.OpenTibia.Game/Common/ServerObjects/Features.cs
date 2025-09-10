@@ -85,6 +85,7 @@ namespace OpenTibia.Game.Common.ServerObjects
 			{                
                 featureFlags.Add(FeatureFlag.PlayerSoul);
                 featureFlags.Add(FeatureFlag.LevelUInt16);
+                featureFlags.Add(FeatureFlag.ReadableItemAuthor);                
             }
 
             if (clientVersion >= 770)
@@ -1385,6 +1386,11 @@ namespace OpenTibia.Game.Common.ServerObjects
 			if (clientVersion < 770)
 			{
 				magicEffectType = magicEffectType - 1;
+
+				if (magicEffectType >= MagicEffectType.Bubbles)
+                {
+                    magicEffectType =  MagicEffectType.Puff;
+                }
 			}
             else if (clientVersion < 780)
             {
@@ -1418,6 +1424,11 @@ namespace OpenTibia.Game.Common.ServerObjects
 			if (clientVersion < 770)
 			{
                 projectileType = projectileType - 1;
+
+				if (projectileType >= ProjectileType.InfernalBolt)
+                {
+                    projectileType = ProjectileType.Spear;
+                }
 			}
             else if (clientVersion < 780)
             {

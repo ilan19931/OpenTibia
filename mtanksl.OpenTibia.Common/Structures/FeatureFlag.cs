@@ -4,6 +4,7 @@
     {
         PlayerSoul,
         LevelUInt16,
+        ReadableItemAuthor,
         LookTypeUInt16,
         MessageStatement,
         LoginPacketEncryption,
