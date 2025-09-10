@@ -76,21 +76,23 @@ namespace OpenTibia.Game.Common.ServerObjects
                     {
                         metadata.TopOrder = TopOrder.Ground;
                     }
-                    else if (otbItem.TopOrder == TopOrder.HighPriority)
-                    {
-                        metadata.TopOrder = TopOrder.HighPriority;
-                    }
-                    else if (otbItem.TopOrder == TopOrder.MediumPriority)
-                    {
-                        metadata.TopOrder = TopOrder.MediumPriority;
-                    }
-                    else if (otbItem.TopOrder == TopOrder.LowPriority)
-                    {
-                        metadata.TopOrder = TopOrder.LowPriority;
-                    }
                     else
                     {
-                        metadata.TopOrder = TopOrder.Other;
+                        if (otbItem.TopOrder == 0)
+                        {
+                            if (otbItem.Flags.Is(ItemFlags.AlwaysOnTop) )
+                            {
+                                metadata.TopOrder = TopOrder.LowPriority;
+                            }
+                            else
+                            {
+                                metadata.TopOrder = TopOrder.Other;
+                            }
+                        }
+                        else
+                        {
+                            metadata.TopOrder = (TopOrder)otbItem.TopOrder;
+                        }
                     }
 
                     if (otbItem.Group == ItemGroup.Container)

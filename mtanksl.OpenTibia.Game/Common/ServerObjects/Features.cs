@@ -1035,9 +1035,9 @@ namespace OpenTibia.Game.Common.ServerObjects
 			
 			gameCommands.Add(0xBE, new PacketToCommand<StopIncomingPacket>("Stop", (connection, packet) => new ParseStopCommand(connection.Client.Player) ) );
 
-            // 0xC9 - Update Tile
-
-            // 0xCA - Update Container
+			gameCommands.Add(0xC9, new PacketToCommand<UpdateTileIncomingPacket>("Update Tile", (connection, packet) => new IgnoreCommand(connection.Client.Player) ) );
+		
+			gameCommands.Add(0xCA, new PacketToCommand<UpdateContainerIncomingPacket>("Update Container", (connection, packet) => new ParseUpdateContainerCommand(connection.Client.Player, packet.ContainerId) ) );
 
 			if (HasFeatureFlag(FeatureFlag.BrowseField) )
 			{
@@ -1246,10 +1246,10 @@ namespace OpenTibia.Game.Common.ServerObjects
 			gameAccountManagerCommands.Add(0xAC, new PacketToCommand<ExcludePlayerIncomingPacket>("Exclude Player", (connection, packet) => new IgnoreCommand(connection.Client.Player) ) );
             
 			gameAccountManagerCommands.Add(0xBE, new PacketToCommand<StopIncomingPacket>("Stop", (connection, packet) => new IgnoreCommand(connection.Client.Player) ) );
-            
-			// 0xC9 - Update Tile
-            
-			// 0xCA - Update Container
+
+            gameAccountManagerCommands.Add(0xC9, new PacketToCommand<UpdateTileIncomingPacket>("Update Tile", (connection, packet) => new IgnoreCommand(connection.Client.Player) ) );
+
+            gameAccountManagerCommands.Add(0xCA, new PacketToCommand<UpdateContainerIncomingPacket>("Update Container", (connection, packet) => new IgnoreCommand(connection.Client.Player) ) );
             
 			if (HasFeatureFlag(FeatureFlag.BrowseField) )
 			{

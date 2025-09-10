@@ -110,7 +110,7 @@ namespace OpenTibia.FileFormats.Otb
 
                     case OtbAttribute.TopOrder:
 
-                        item.TopOrder = (TopOrder)reader.ReadByte();
+                        item.TopOrder = reader.ReadByte();
 
                         break;
 
@@ -151,7 +151,7 @@ namespace OpenTibia.FileFormats.Otb
 
         public ushort LightColor { get; set; }
 
-        public TopOrder TopOrder { get; set; }
+        public byte TopOrder { get; set; }
 
         public ushort WareId { get; set; }
     }
